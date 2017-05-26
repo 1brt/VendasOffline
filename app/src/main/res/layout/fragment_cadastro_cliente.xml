@@ -20,8 +20,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
+            android:maxLength="60"
             android:inputType="textPersonName"
-            android:text="@string/hint_nome" />
+            android:hint="@string/hint_nome" />
 
         <RadioGroup
             android:id="@+id/rdgTipoPessoa"
@@ -54,8 +55,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
+            android:maxLength="15"
             android:inputType="textPersonName"
-            android:text="@string/hint_cpf" />
+            android:hint="@string/hint_cpf" />
 
         <Spinner
             android:id="@+id/spnPais"
@@ -79,8 +81,9 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
+            android:maxLength="60"
             android:inputType="textPersonName"
-            android:text="@string/hint_cidade" />
+            android:hint="@string/hint_cidade" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,8 +98,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPostalAddress"
-                android:text="@string/hint_cep" />
+                android:maxLength="10"
+                android:hint="@string/hint_cep"
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/edtxtNro"
@@ -104,8 +108,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:ems="10"
+                android:maxLength="6"
                 android:inputType="number"
-                android:text="@string/hint_nro" />
+                android:hint="@string/hint_nro" />
         </LinearLayout>
 
     </LinearLayout>
@@ -116,6 +121,7 @@
         android:layout_weight="2"
         android:paddingRight="@dimen/padding_rigth_cadastro_cliente"
         android:paddingLeft="@dimen/padding_left_cadastro_cliente"
+        android:paddingBottom="@dimen/padding_bottom_cadastro_cliente"
         android:orientation="horizontal"
         android:gravity="bottom">
 

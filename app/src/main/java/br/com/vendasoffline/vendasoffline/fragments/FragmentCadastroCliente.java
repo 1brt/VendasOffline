@@ -2,6 +2,7 @@ package br.com.vendasoffline.vendasoffline.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,9 @@ public class FragmentCadastroCliente extends Fragment{
             @Override
             public void onClick(View v) {
                 // Saí do fragment atual.
-                getActivity().getFragmentManager().popBackStack();
+                FragmentManager fm = getFragmentManager();
+                fm.popBackStackImmediate();
+
             }
         });
 

@@ -8,6 +8,7 @@
     <dimen name="padding_rigth_cadastro_cliente">5dp</dimen>
     <dimen name="padding_left_cadastro_cliente">5dp</dimen>
     <dimen name="padding_top_cadastro_cliente">5dp</dimen>
+    <dimen name="padding_bottom_cadastro_cliente">5dp</dimen>
     <item name="visible" type="id" />
     <item name="masked" type="id" />
 

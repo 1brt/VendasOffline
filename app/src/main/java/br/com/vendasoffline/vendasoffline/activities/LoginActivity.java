@@ -139,15 +139,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (databaseHelper.checkUser(textInputEditTextEmail.getText().toString().trim()
                 , textInputEditTextPassword.getText().toString().trim())) {
 
-
-            /*Intent accountsIntent = new Intent(activity, UsersListActivity.class);
-            accountsIntent.putExtra("EMAIL", textInputEditTextEmail.getText().toString().trim());
-            startActivity(accountsIntent);*/
             emptyInputEditText();
-            Toast.makeText(activity, "bombou", Toast.LENGTH_SHORT).show();
             // TODO: 24/05/17 Colocar nova atividade aqui.
             Intent menuPrincipal = new Intent(this, MainActivity.class);
             startActivity(menuPrincipal);
+            finish();
 
         } else {
             // Snack Bar to show success message that record is wrong
