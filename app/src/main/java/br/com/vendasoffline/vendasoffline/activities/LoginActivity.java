@@ -146,7 +146,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             emptyInputEditText();
             Toast.makeText(activity, "bombou", Toast.LENGTH_SHORT).show();
             // TODO: 24/05/17 Colocar nova atividade aqui.
-
+            Intent menuPrincipal = new Intent(this, MainActivity.class);
+            startActivity(menuPrincipal);
 
         } else {
             // Snack Bar to show success message that record is wrong

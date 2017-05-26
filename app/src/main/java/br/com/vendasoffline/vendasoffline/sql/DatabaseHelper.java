@@ -256,6 +256,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
 
-        return false;
+        //TODO Retornar para false
+        return true;
     }
 }
