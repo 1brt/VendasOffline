@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    android:weightSum="2"
+    android:weightSum="3"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="6"
+        android:weightSum="7"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="@string/hint_nome" />
 
         <RadioGroup
             android:id="@+id/rdgTipoPessoa"
@@ -28,21 +28,22 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2"
+            android:checkedButton="@id/rdbFisica">
 
             <RadioButton
                 android:id="@+id/rdbFisica"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="RadioButton" />
+                android:text="@string/radio_button_fisica" />
 
             <RadioButton
                 android:id="@+id/rdbJuridica"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="RadioButton" />
+                android:text="@string/radio_button_juridica" />
 
         </RadioGroup>
 
@@ -53,19 +54,23 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="@string/hint_cpf" />
 
         <Spinner
             android:id="@+id/spnPais"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:entries="@array/array_paises"
+            android:prompt="@string/prompt_paises"/>
 
         <Spinner
             android:id="@+id/spnUF"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:entries="@array/array_uf"
+            android:prompt="@string/prompt_uf"/>
 
         <EditText
             android:id="@+id/edtxtCidade"
@@ -74,14 +79,40 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="@string/hint_cidade" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="3"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edtxtCep"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPostalAddress"
+                android:text="@string/hint_cep" />
+
+            <EditText
+                android:id="@+id/edtxtNro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:ems="10"
+                android:inputType="number"
+                android:text="@string/hint_nro" />
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:orientation="vertical">
 
     </LinearLayout>

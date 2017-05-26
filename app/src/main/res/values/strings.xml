@@ -14,7 +14,12 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."</string>
     <string name="text_accounts">All Accounts</string>
-    <string name="hint_name">Name</string>
+    <string name="hint_nome">Nome</string>
+    <string name="hint_cnpj">CNPJ</string>
+    <string name="hint_cpf">CPF</string>
+    <string name="hint_cidade">Cidade</string>
+    <string name="hint_cep">Cep</string>
+    <string name="hint_nro">Nro.</string>
     <string name="hint_usuario">Usuário</string>
     <string name="hint_password">Senha</string>
     <string name="hint_confirm_password">Confirm Password</string>
@@ -35,7 +40,14 @@
     <string name="text_title">Android Tutorials Hub</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main">MainActivity</string>
+
+    <string name="action_exit">Logout</string>
+
     <string name="ic_menu_tema">Temas</string>
+
+    <string name="radio_button_fisica">Física</string>
+    <string name="radio_button_juridica">Jurídica</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_new_game">Novo Jogo</string>
@@ -43,5 +55,50 @@
     <string name="navigation_drawer_trans">Transporte</string>
     <string name="navigation_drawer_socmed">Mídia Social</string>
     <string name="navigation_drawer_pokemon">Pokemon Go</string>
+
+    <string name="prompt_paises">País</string>
+    <string name="prompt_uf">País</string>
+
+    <string-array name="array_paises">
+        <item>Argentina</item>
+        <item>Brasil</item>
+        <item>Chile</item>
+        <item>Estados Unidos</item>
+        <item>México</item>
+        <item>Paraguai</item>
+        <item>Uruguai</item>
+    </string-array>
+
+    <string-array name="array_uf">
+        <item>EX - Exterior</item>
+        <item>AC - Acre</item>
+        <item>AL - Alagoas</item>
+        <item>AP - Amapá</item>
+        <item>AM - Amazonas</item>
+        <item>BA - Bahia</item>
+        <item>CE - Ceará</item>
+        <item>DF - Distrito Federal</item>
+        <item>ES - Espírito Santo</item>
+        <item>GO - Goiás</item>
+        <item>MA - Maranhão</item>
+        <item>MT - Mato Grosso</item>
+        <item>MS - Mato Grosso do Sul</item>
+        <item>MG - Minas Gerais</item>
+        <item>PA - Pará</item>
+        <item>PB - Paraíba</item>
+        <item>PR - Paraná</item>
+        <item>PE - Pernambuco</item>
+        <item>PI - Piauí</item>
+        <item>RJ - Rio de Janeiro</item>
+        <item>RN - Rio Grande do Norte</item>
+        <item>RS - Rio Grande do Sul</item>
+        <item>RO - Rondônia</item>
+        <item>RR - Roraima</item>
+        <item>SC - Santa Catarina</item>
+        <item>SP - São Paulo</item>
+        <item>SE - Sergipe</item>
+        <item>TO - Tocantins</item>
+
+    </string-array>
 
 </resources>
