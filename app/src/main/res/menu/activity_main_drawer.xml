@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_newgame"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/navigation_drawer_new_game" />
+        <item
+            android:id="@+id/nav_record"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/navigation_drawer_record" />
+    </group>
+
+    <item android:title="@string/ic_menu_tema">
+        <menu>
+            <item
+                android:id="@+id/nav_trans"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/navigation_drawer_trans"/>
+            <item
+                android:id="@+id/nav_socmed"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/navigation_drawer_socmed"/>
+            <item
+                android:id="@+id/nav_pokemon"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/navigation_drawer_pokemon"/>
+        </menu>
+    </item>
+
 </menu>

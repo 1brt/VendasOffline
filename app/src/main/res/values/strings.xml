@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VendasOffline</string>
+    <string name="app_name">Vendas Offline</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -35,7 +35,13 @@
     <string name="text_title">Android Tutorials Hub</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main">MainActivity</string>
-
+    <string name="ic_menu_tema">Temas</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_new_game">Novo Jogo</string>
+    <string name="navigation_drawer_record">Records</string>
+    <string name="navigation_drawer_trans">Transporte</string>
+    <string name="navigation_drawer_socmed">Mídia Social</string>
+    <string name="navigation_drawer_pokemon">Pokemon Go</string>
+
 </resources>
