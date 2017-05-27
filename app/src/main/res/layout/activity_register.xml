@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_nome"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:maxLines="1"
                 android:textColor="@color/colorText" />
         </android.support.design.widget.TextInputLayout>

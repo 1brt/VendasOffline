@@ -21,7 +21,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:maxLength="60"
-            android:inputType="textPersonName"
+            android:inputType="textCapSentences"
             android:hint="@string/hint_nome" />
 
         <RadioGroup
@@ -56,7 +56,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:maxLength="15"
-            android:inputType="textPersonName"
+            android:inputType="textCapSentences"
             android:hint="@string/hint_cpf" />
 
         <Spinner
@@ -82,7 +82,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:maxLength="60"
-            android:inputType="textPersonName"
+            android:inputType="textCapSentences"
             android:hint="@string/hint_cidade" />
 
         <LinearLayout
