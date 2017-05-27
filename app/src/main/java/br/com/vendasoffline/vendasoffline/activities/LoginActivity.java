@@ -53,16 +53,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private NestedScrollView nestedScrollView;
 
-    private TextInputLayout textInputLayoutEmail;
-    private TextInputLayout textInputLayoutPassword;
+    private TextInputLayout textInputLayoutUsuario;
+    private TextInputLayout textInputLayoutSenha;
 
-    private TextInputEditText textInputEditTextEmail;
-    private TextInputEditText textInputEditTextPassword;
+    private TextInputEditText textInputEditTextUsuario;
+    private TextInputEditText textInputEditTextSenha;
 
     private AppCompatButton appCompatButtonLogin;
 
     private InputValidation inputValidation;
     private DatabaseHelper databaseHelper;
+
+    private AppCompatTextView textViewLinkRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +84,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
 
-        textInputLayoutEmail = (TextInputLayout) findViewById(R.id.textInputLayoutEmail);
-        textInputLayoutPassword = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
+        textInputLayoutUsuario = (TextInputLayout) findViewById(R.id.textInputLayoutEmail);
+        textInputLayoutSenha = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
 
-        textInputEditTextEmail = (TextInputEditText) findViewById(R.id.textInputEditTextEmail);
-        textInputEditTextPassword = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
+        textInputEditTextUsuario = (TextInputEditText) findViewById(R.id.textInputEditTextEmail);
+        textInputEditTextSenha = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
 
         appCompatButtonLogin = (AppCompatButton) findViewById(R.id.appCompatButtonLogin);
+
+        textViewLinkRegister = (AppCompatTextView) findViewById(R.id.textViewLinkRegister);
 
     }
 
@@ -97,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initListeners() {
         appCompatButtonLogin.setOnClickListener(this);
+        textViewLinkRegister.setOnClickListener(this);
     }
 
     /**
@@ -119,6 +124,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.appCompatButtonLogin:
                 verifyFromSQLite();
                 break;
+            case R.id.textViewLinkRegister:
+                // Navigate to RegisterActivity
+                Intent intentRegister = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intentRegister);
+                break;
         }
     }
 
@@ -126,26 +136,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * This method is to validate the input text fields and verify login credentials from SQLite
      */
     private void verifyFromSQLite() {
+        String usuario = textInputEditTextUsuario.getText().toString().trim();
 
-        //TODO voltar a validação de email
-        /*
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextEmail, textInputLayoutEmail, getString(R.string.error_message_email))) {
-            return;
+        if (usuario.contains("@")){
+            if (!inputValidation.isInputEditTextFilled(textInputEditTextUsuario, textInputLayoutUsuario, getString(R.string.error_message_email))) {
+                return;
+            }
+            if (!inputValidation.isInputEditTextEmail(textInputEditTextUsuario, textInputLayoutUsuario, getString(R.string.error_message_email))) {
+                return;
+            }
+            if (!inputValidation.isInputEditTextFilled(textInputEditTextSenha, textInputLayoutSenha, getString(R.string.error_message_email))) {
+                return;
+            }
         }
-        if (!inputValidation.isInputEditTextEmail(textInputEditTextEmail, textInputLayoutEmail, getString(R.string.error_message_email))) {
-            return;
-        }
-        if (!inputValidation.isInputEditTextFilled(textInputEditTextPassword, textInputLayoutPassword, getString(R.string.error_message_email))) {
-            return;
-        }
-        */
-        if (databaseHelper.checkUser(textInputEditTextEmail.getText().toString().trim()
-                , textInputEditTextPassword.getText().toString().trim())) {
 
-            emptyInputEditText();
+        if (databaseHelper.checkUser(usuario, textInputEditTextSenha.getText().toString().trim())) {
+
             // TODO: 24/05/17 Colocar nova atividade aqui.
             Intent menuPrincipal = new Intent(this, MainActivity.class);
             startActivity(menuPrincipal);
+            //emptyInputEditText();
             finish();
 
         } else {
@@ -158,7 +168,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * This method is to empty all input edit text
      */
     private void emptyInputEditText() {
-        textInputEditTextEmail.setText(null);
-        textInputEditTextPassword.setText(null);
+        textInputEditTextUsuario.setText(null);
+        textInputEditTextSenha.setText(null);
     }
 }

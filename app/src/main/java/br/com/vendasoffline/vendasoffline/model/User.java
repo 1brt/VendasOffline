@@ -7,9 +7,10 @@ package br.com.vendasoffline.vendasoffline.model;
 public class User {
 
     private int id;
-    private String name;
+    private String nome;
+    private String usuario;
     private String email;
-    private String password;
+    private String senha;
 
     public int getId() {
         return id;
@@ -19,13 +20,17 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome= nome;
     }
+
+    public String getUsuario(){ return  usuario; }
+
+    public void setUsuario(String usuario){ this.usuario = usuario; }
 
     public String getEmail() {
         return email;
@@ -35,11 +40,11 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

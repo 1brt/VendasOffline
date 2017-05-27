@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Vendas Offline</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">Vendas Offline</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -15,6 +15,7 @@
         completions."</string>
     <string name="text_accounts">All Accounts</string>
     <string name="hint_nome">Nome</string>
+    <string name="hint_email">Email</string>
     <string name="hint_cnpj">CNPJ</string>
     <string name="hint_cpf">CPF</string>
     <string name="hint_cidade">Cidade</string>
@@ -22,19 +23,21 @@
     <string name="hint_nro">Nro.</string>
     <string name="hint_usuario">Usuário</string>
     <string name="hint_password">Senha</string>
-    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_confirm_password">Confirme a senha</string>
     <string name="text_login">Login</string>
     <string name="text_register">Registrar</string>
     <string name="btn_cadastro">Cadastrar</string>
     <string name="btn_cancela">Cancelar</string>
     <string name="error_message_name">Enter Full Name</string>
+    <string name="error_message_user">Digite um Usuário Válido</string>
     <string name="error_message_email">Enter Valid Email</string>
     <string name="error_message_age">Enter Age</string>
     <string name="error_message_password">Enter Password</string>
-    <string name="success_message">Registration Successful</string>
+    <string name="success_message">Operação Concluída com Sucesso</string>
     <string name="text_not_member">Ainda não tem uma conta? Crie uma</string>
-    <string name="text_already_member">Already a member? Login</string>
-    <string name="error_email_exists">Email Already Exists</string>
+    <string name="text_already_member">Já é um membro? Faça o Login</string>
+    <string name="error_email_exists">O Email já está cadastrado</string>
+    <string name="error_user_exists">O Usuário já está cadastrado</string>
     <string name="error_password_match">Password Does Not Matches</string>
     <string name="error_valid_email_password">Wrong Email or Password</string>
     <string name="action_settings">Settings</string>
