@@ -151,9 +151,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if (databaseHelper.checkUser(usuario, textInputEditTextSenha.getText().toString().trim())) {
-
-            // TODO: 24/05/17 Colocar nova atividade aqui.
             Intent menuPrincipal = new Intent(this, MainActivity.class);
+            menuPrincipal.putExtra("Usuario",usuario);
             startActivity(menuPrincipal);
             //emptyInputEditText();
             finish();

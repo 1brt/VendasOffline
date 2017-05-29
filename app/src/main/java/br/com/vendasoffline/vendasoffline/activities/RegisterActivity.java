@@ -178,5 +178,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         textInputEditTextEmail.setText(null);
         textInputEditTextSenha.setText(null);
         textInputEditTextConfirmaSenha.setText(null);
+        textInputEditTextNome.requestFocus();
     }
 }

@@ -174,6 +174,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * This method is to fetch all user and return the list of user records
+     *
+     * @return User
+     */
+    public User getUser(String usuario){
+        User user = new User();
+
+        String[] columns = {
+                COLUMN_USER_ID,
+                COLUMN_USER,
+                COLUMN_USER_EMAIL,
+                COLUMN_USER_NAME,
+                COLUMN_USER_PASSWORD
+        };
+        String whereClause = COLUMN_USER+" = ?";
+        String[] whereArgs = {usuario};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_USER, //Table to query
+                columns,    //columns to return
+                whereClause,        //columns for the WHERE clause
+                whereArgs,        //The values for the WHERE clause
+                null,       //group the rows
+                null,       //filter by row groups
+                null); //The sort order
+
+        if (cursor.moveToFirst()) {
+            user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
+            user.setNome(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
+            user.setUsuario(cursor.getString(cursor.getColumnIndex(COLUMN_USER)));
+            user.setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
+            user.setSenha(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
+        }
+        cursor.close();
+        db.close();
+
+        return user;
+
+    }
+
+    /**
      * This method to update user record
      *
      * @param user
