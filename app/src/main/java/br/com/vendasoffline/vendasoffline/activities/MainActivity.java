@@ -1,12 +1,16 @@
 package br.com.vendasoffline.vendasoffline.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
@@ -50,12 +54,17 @@ import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    private static final String diretorio = "/sdcard/Prodest/Imagens/";
+    private static final int MY_PERMISSIONS_REQUEST_ACTION_IMAGE_CAPTURE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_ACTION_PICK = 2;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 2;
+    private static final String diretorio = Environment.getExternalStorageDirectory()+"/Prodest/Imagens/";
 
     private User usuario;
     private ImageView imgvUsuario;
     private TextView txtNomeUsuario;
     private DatabaseHelper databaseHelper;
+    private ContextMenu varMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +94,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        File folder = new File(diretorio);
+        if (!folder.mkdir()){
+            folder.mkdirs();
+        }
 
         databaseHelper = new DatabaseHelper(MainActivity.this);
 
@@ -131,19 +145,21 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-        if (v.getId()==R.id.imgvFotoUsuario) {
-            //AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-            // Utilizado para vibrar o celular.
-            Vibrator vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE) ;
-            vibe.vibrate(50);
 
-            String[] menuItems = new String[] {"Câmera","Galeria"};
-            for (int i = 0; i<menuItems.length; i++) {
-                menu.add(Menu.NONE, i, i, menuItems[i]);
+        if (v.getId()==R.id.imgvFotoUsuario) {
+            varMenu = menu;
+
+            requestAllPermissions();
+
+            if (hasAllPermissions()){
+                vibrate();
+                contextMenu(varMenu);
             }
+
         }
     }
 
@@ -154,11 +170,12 @@ public class MainActivity extends AppCompatActivity
 
         if (menuItemIndex == 0){  // Câmera
             Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(takePicture, 0);
+            startActivityForResult(takePicture, MY_PERMISSIONS_REQUEST_ACTION_IMAGE_CAPTURE);
         }else if (menuItemIndex == 1){ // Galeria
             String status = Environment.getExternalStorageState();
             if (status.equals(Environment.MEDIA_MOUNTED)) {
-                /*File tempFile = new File(Environment.getExternalStorageDirectory(),"temp.jpg");
+
+                File tempFile = new File(diretorio + usuario.getUsuario() + ".jpg");
                 Uri tempUri = Uri.fromFile(tempFile);
 
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -167,9 +184,9 @@ public class MainActivity extends AppCompatActivity
                 pickPhoto.putExtra(MediaStore.EXTRA_OUTPUT,
                         tempUri);
                 pickPhoto.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+                startActivityForResult(pickPhoto, MY_PERMISSIONS_REQUEST_ACTION_PICK);
+                /*Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(pickPhoto, 1);*/
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto, 1);
             }
         }
 
@@ -180,25 +197,40 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
-            case 0:
+            case MY_PERMISSIONS_REQUEST_ACTION_IMAGE_CAPTURE:
                 if(resultCode == RESULT_OK){
                     /*Uri selectedImage = data.getData();
                     imgvUsuario.setImageURI(selectedImage);*/
-                    Bitmap photo = (Bitmap) data.getExtras().get("data");
                     //Set<String> keys = data.getExtras().keySet();
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
                     imgvUsuario.setImageBitmap(photo);
                 }
 
                 break;
-            case 1:
+            case MY_PERMISSIONS_REQUEST_ACTION_PICK:
                 if(resultCode == RESULT_OK){
-                    Uri selectedImage = data.getData();
-                    imgvUsuario.setImageURI(selectedImage);
-                    /*Bitmap photo = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/temp.jpg");
-                    imgvUsuario.setImageBitmap(photo);*/
+                    /*Uri selectedImage = data.getData();
+                    imgvUsuario.setImageURI(selectedImage);*/
+                    Bitmap photo = BitmapFactory.decodeFile(diretorio + usuario.getUsuario() + ".jpg");
+                    imgvUsuario.setImageBitmap(photo);
 
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE ||
+            requestCode == MY_PERMISSIONS_REQUEST_CAMERA){
+
+           if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (hasAllPermissions()){
+                    contextMenu(varMenu);
+                }
+            }
         }
     }
 
@@ -258,5 +290,52 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void contextMenu(ContextMenu menu){
+        //AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+
+        String[] menuItems = new String[] {"Câmera","Galeria"};
+        for (int i = 0; i<menuItems.length; i++) {
+            menu.add(Menu.NONE, i, i, menuItems[i]);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean hasAllPermissions(){
+        boolean retorno = true;
+
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
+        return retorno;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void requestAllPermissions(){
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            vibrate();
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            return;
+        }
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            vibrate();
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CAMERA);
+            return;
+        }
+    }
+
+    public void vibrate(){
+        // Utilizado para vibrar o celular.
+        Vibrator vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE) ;
+        vibe.vibrate(50);
     }
 }
