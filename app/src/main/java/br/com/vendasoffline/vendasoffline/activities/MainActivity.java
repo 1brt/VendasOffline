@@ -21,6 +21,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.ContextMenu;
@@ -56,15 +57,15 @@ public class MainActivity extends AppCompatActivity
 
     private static final int MY_PERMISSIONS_REQUEST_ACTION_IMAGE_CAPTURE = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACTION_PICK = 2;
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 2;
+    private static final int MY_PERMISSIONS_REQUEST = 1;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 3;
     private static final String diretorio = Environment.getExternalStorageDirectory()+"/Prodest/Imagens/";
 
     private User usuario;
     private ImageView imgvUsuario;
     private TextView txtNomeUsuario;
     private DatabaseHelper databaseHelper;
-    private ContextMenu varMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,13 +152,15 @@ public class MainActivity extends AppCompatActivity
                                     ContextMenu.ContextMenuInfo menuInfo) {
 
         if (v.getId()==R.id.imgvFotoUsuario) {
-            varMenu = menu;
 
             requestAllPermissions();
 
             if (hasAllPermissions()){
                 vibrate();
-                contextMenu(varMenu);
+                String[] menuItems = new String[] {"Câmera","Galeria"};
+                for (int i = 0; i<menuItems.length; i++) {
+                    menu.add(Menu.NONE, i, i, menuItems[i]);
+                }
             }
 
         }
@@ -223,12 +226,11 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
 
-        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE ||
-            requestCode == MY_PERMISSIONS_REQUEST_CAMERA){
+        if (requestCode == MY_PERMISSIONS_REQUEST){
 
            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (hasAllPermissions()){
-                    contextMenu(varMenu);
+                    showMessage("Todas as permissões foram concedidas!");
                 }
             }
         }
@@ -292,13 +294,15 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void contextMenu(ContextMenu menu){
-        //AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean hasPermission(String permission){
+        boolean retorno = true;
 
-        String[] menuItems = new String[] {"Câmera","Galeria"};
-        for (int i = 0; i<menuItems.length; i++) {
-            menu.add(Menu.NONE, i, i, menuItems[i]);
+        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
         }
+
+        return retorno;
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -318,6 +322,32 @@ public class MainActivity extends AppCompatActivity
 
     @TargetApi(Build.VERSION_CODES.M)
     public void requestAllPermissions(){
+        String permis = "Você precisa permitir o acesso ao(s) seguinte(s) recurso(s): \n";
+        Boolean comPermis = true;
+
+        if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            permis = permis + "Armazenamento Externo \n";
+            comPermis = false;
+        }
+
+        if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) && !hasPermission(Manifest.permission.CAMERA)){
+            permis = permis + "Câmera \n";
+            comPermis = false;
+        }
+
+        if (!comPermis){
+            showMessage(permis);
+            return;
+        }
+
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+            checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            vibrate();
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST);
+            return;
+        }
+
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             vibrate();
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -337,5 +367,14 @@ public class MainActivity extends AppCompatActivity
         // Utilizado para vibrar o celular.
         Vibrator vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE) ;
         vibe.vibrate(50);
+    }
+
+    public void showMessage(String message){
+        new AlertDialog.Builder(MainActivity.this)
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
     }
 }
