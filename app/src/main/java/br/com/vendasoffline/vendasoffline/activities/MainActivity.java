@@ -405,7 +405,7 @@ public class MainActivity extends AppCompatActivity
 
     public void carregaImagemUsuario(){
         File imgFile = new  File(diretorio,usuario.getUsuario() + ".jpg");
-            if(imgFile.exists()){
+            if(imgFile.exists() && hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
 
                 Bitmap photo = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
