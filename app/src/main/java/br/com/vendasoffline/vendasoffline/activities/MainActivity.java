@@ -42,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Locale;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView imgvUsuario;
     private TextView txtNomeUsuario;
     private DatabaseHelper databaseHelper;
+    private File folder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        File folder = new File(diretorio);
+        folder = new File(diretorio);
         if (!folder.mkdir()){
             folder.mkdirs();
         }
@@ -135,6 +137,7 @@ public class MainActivity extends AppCompatActivity
             txtNomeUsuario.setText(usuario.getNome());
         }
 
+        carregaImagemUsuario();
         registerForContextMenu(imgvUsuario);
 
         /*imgvUsuario.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +176,9 @@ public class MainActivity extends AppCompatActivity
 
         if (menuItemIndex == 0){  // Câmera
             Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            /*File image = new File(folder, usuario.getUsuario() + ".jpg");
+            Uri uriSavedImage = Uri.fromFile(image);
+            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);*/
             startActivityForResult(takePicture, MY_PERMISSIONS_REQUEST_ACTION_IMAGE_CAPTURE);
         }else if (menuItemIndex == 1){ // Galeria
             String status = Environment.getExternalStorageState();
@@ -207,6 +213,25 @@ public class MainActivity extends AppCompatActivity
                     //Set<String> keys = data.getExtras().keySet();
                     Bitmap photo = (Bitmap) data.getExtras().get("data");
                     imgvUsuario.setImageBitmap(photo);
+                    try {
+                        File tempFile = new File(diretorio + usuario.getUsuario() + ".jpg");
+                        FileOutputStream out = new FileOutputStream(tempFile);
+                        photo.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                        out.flush();
+                        out.close();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    /*File imgFile = new  File(diretorio,usuario.getUsuario() + ".jpg");
+
+                    if(imgFile.exists()){
+
+                        Bitmap photo = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                        imgvUsuario.setImageBitmap(photo);
+
+                    }*/
                 }
 
                 break;
@@ -376,5 +401,16 @@ public class MainActivity extends AppCompatActivity
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
+    }
+
+    public void carregaImagemUsuario(){
+        File imgFile = new  File(diretorio,usuario.getUsuario() + ".jpg");
+            if(imgFile.exists()){
+
+                Bitmap photo = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                imgvUsuario.setImageBitmap(photo);
+
+            }
     }
 }
