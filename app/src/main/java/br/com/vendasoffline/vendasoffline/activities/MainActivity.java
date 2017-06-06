@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity
     private TextView txtNomeUsuario;
     private DatabaseHelper databaseHelper;
     private File folder;
+    private SharedPreferences prefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,10 +101,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        folder = new File(diretorio);
-        if (!folder.mkdir()){
-            folder.mkdirs();
-        }
+        prefs = getSharedPreferences("br.com.vendasoffline.vendasoffline", MODE_PRIVATE);
 
         databaseHelper = new DatabaseHelper(MainActivity.this);
 
@@ -256,6 +256,10 @@ public class MainActivity extends AppCompatActivity
            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (hasAllPermissions()){
                     showMessage("Todas as permissões foram concedidas!");
+                    folder = new File(diretorio);
+                    if (!folder.mkdir()){
+                        folder.mkdirs();
+                    }
                 }
             }
         }
@@ -349,13 +353,21 @@ public class MainActivity extends AppCompatActivity
     public void requestAllPermissions(){
         String permis = "Você precisa permitir o acesso ao(s) seguinte(s) recurso(s): \n";
         Boolean comPermis = true;
+        Boolean firstRun = false;
 
-        if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (prefs.getBoolean("firstrun", true)) {
+            // Do first run stuff here then set 'firstrun' as false
+            // using the following line to edit/commit prefs
+            firstRun = true;
+            prefs.edit().putBoolean("firstrun", false).commit();
+        }
+
+        if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !firstRun) {
             permis = permis + "Armazenamento Externo \n";
             comPermis = false;
         }
 
-        if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) && !hasPermission(Manifest.permission.CAMERA)){
+        if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) && !hasPermission(Manifest.permission.CAMERA) && !firstRun){
             permis = permis + "Câmera \n";
             comPermis = false;
         }
