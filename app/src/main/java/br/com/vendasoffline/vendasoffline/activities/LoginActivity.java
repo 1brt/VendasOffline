@@ -83,15 +83,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void initViews() {
 
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
-
         textInputLayoutUsuario = (TextInputLayout) findViewById(R.id.textInputLayoutEmail);
         textInputLayoutSenha = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
-
         textInputEditTextUsuario = (TextInputEditText) findViewById(R.id.textInputEditTextEmail);
         textInputEditTextSenha = (TextInputEditText) findViewById(R.id.textInputEditTextPassword);
-
         appCompatButtonLogin = (AppCompatButton) findViewById(R.id.appCompatButtonLogin);
-
         textViewLinkRegister = (AppCompatTextView) findViewById(R.id.textViewLinkRegister);
 
     }

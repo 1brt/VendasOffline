@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/padding_top_cadastro_cliente"
     android:background="@color/colorBackground"
-    android:weightSum="3"
+    android:weightSum="4"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="7"
+        android:weightSum="8"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -58,6 +59,14 @@
             android:maxLength="15"
             android:inputType="textCapSentences"
             android:hint="@string/hint_cpf" />
+
+        <ImageButton
+            android:id="@+id/btnGPS"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorBackground"
+            app:srcCompat="@drawable/ic_my_location_black" />
 
         <Spinner
             android:id="@+id/spnPais"
@@ -118,7 +127,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:paddingRight="@dimen/padding_rigth_cadastro_cliente"
         android:paddingLeft="@dimen/padding_left_cadastro_cliente"
         android:paddingBottom="@dimen/padding_bottom_cadastro_cliente"
