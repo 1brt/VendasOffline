@@ -19,6 +19,7 @@
     <string name="hint_cnpj">CNPJ</string>
     <string name="hint_cpf">CPF</string>
     <string name="hint_cidade">Cidade</string>
+    <string name="hint_endereco">Endereço</string>
     <string name="hint_cep">Cep</string>
     <string name="hint_nro">Nro.</string>
     <string name="hint_usuario">Usuário</string>

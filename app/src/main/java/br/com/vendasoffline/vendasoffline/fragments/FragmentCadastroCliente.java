@@ -1,8 +1,11 @@
 package br.com.vendasoffline.vendasoffline.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.location.Address;
@@ -10,12 +13,14 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,18 +45,21 @@ import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by lrgabriel on 26/05/17.
  */
 
 public class FragmentCadastroCliente extends Fragment implements View.OnClickListener {
-
+    private final static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private View view;
     private EditText edtxtNome;
     private EditText edtxtCnpj;
     private EditText edtxtCidade;
     private EditText edtxtCep;
     private EditText edtxtNro;
+    private EditText edtxtEndereco;
     private RadioGroup rdgTipoPessoa;
     private Spinner spnPais;
     private Spinner spnUf;
@@ -64,6 +72,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private LocationListener locationListener;
     private List<String> lstPaises;
     private List<String> lstUfs;
+    private SharedPreferences prefs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,6 +93,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         edtxtCep = (EditText) view.findViewById(R.id.edtxtCep);
         edtxtNro = (EditText) view.findViewById(R.id.edtxtNro);
         edtxtNome = (EditText) view.findViewById(R.id.edtxtNome);
+        edtxtEndereco = (EditText) view.findViewById(R.id.edtxtEndereco);
         rdgTipoPessoa = (RadioGroup) view.findViewById(R.id.rdgTipoPessoa);
         spnPais = (Spinner) view.findViewById(R.id.spnPais);
         spnUf = (Spinner) view.findViewById(R.id.spnUF);
@@ -111,6 +121,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         lstPaises = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.array_paises)));
 
         lstUfs = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.array_uf)));
+
+        prefs = getContext().getSharedPreferences("br.com.vendasoffline.vendasoffline", MODE_PRIVATE);
+
     }
 
     /**
@@ -152,8 +165,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         cliente.setPais(spnPais.getTransitionName());
         cliente.setUf(spnUf.getTransitionName());
         cliente.setCidade(edtxtCidade.getText().toString().trim());
-        cliente.setCep(Integer.parseInt(edtxtCep.getText().toString().trim()));
+        cliente.setCep(edtxtCep.getText().toString().trim());
         cliente.setNro(Integer.parseInt(edtxtNro.getText().toString().trim()));
+        cliente.setEndereco(edtxtEndereco.getText().toString().trim());
 
         databaseHelper.addCustomer(cliente);
 
@@ -169,24 +183,27 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         edtxtCidade.setText(null);
         edtxtCep.setText(null);
         edtxtNro.setText(null);
+        edtxtEndereco.setText(null);
         rdgTipoPessoa.check(R.id.rdbFisica);
         spnPais.setSelection(0);
         spnUf.setSelection(0);
+        edtxtNome.requestFocus();
     }
 
     private void getLocation() {
         locationListener = new MyLocationListener();
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
+            requestAllPermissions();
+
             return;
         }
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            buildAlertMessageNoGps();
+        }
+
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, 5000, /*10*/0, locationListener);
     }
@@ -201,6 +218,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             String postalCode="";
             String pais="";
             String uf="";
+            String endereco="";
 
             Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
             List<Address> addresses;
@@ -212,6 +230,8 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
                     uf = addresses.get(0).getAdminArea();
                     cityName = addresses.get(0).getLocality();
                     postalCode = addresses.get(0).getPostalCode();
+                    endereco = addresses.get(0).getAddressLine(0).toString();
+                    endereco = endereco.substring(0,endereco.indexOf(","));
                 }
             }
             catch (IOException e) {
@@ -221,6 +241,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             spnPais.setSelection(lstPaises.indexOf(pais));
             spnUf.setSelection(lstUfs.indexOf(uf));
             edtxtCidade.setText(cityName);
+            edtxtEndereco.setText(endereco);
             edtxtCep.setText(postalCode);
 
             locationManager.removeUpdates(locationListener);
@@ -234,6 +255,74 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {}
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean hasPermission(String permission){
+        boolean retorno = true;
+
+        if (getContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
+        return retorno;
+    }
+
+    public void showMessage(String message){
+        new AlertDialog.Builder(getContext())
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void requestAllPermissions(){
+        String permis = "Você precisa permitir o acesso ao(s) seguinte(s) recurso(s): \n";
+        Boolean comPermis = true;
+        Boolean firstRun = false;
+
+        if (prefs.getBoolean("firstrun", true)) {
+            // Do first run stuff here then set 'firstrun' as false
+            // using the following line to edit/commit prefs
+            firstRun = true;
+            prefs.edit().putBoolean("firstrun", false).commit();
+        }
+
+        if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) && !hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) && !firstRun) {
+            permis = permis + "Localização \n";
+            comPermis = false;
+        }
+
+        if (!comPermis){
+            showMessage(permis);
+            return;
+        }
+
+        if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            return;
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("O GPS do dispositivo parece estar desabilitado, deseja abilita-lo?")
+                .setCancelable(false)
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
 }

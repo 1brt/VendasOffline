@@ -12,7 +12,8 @@ public class Customer {
     private String pais;
     private String uf;
     private String cidade;
-    private int cep;
+    private String endereco;
+    private String cep;
     private int nro;
 
     public int getId(){return id;}
@@ -43,12 +44,15 @@ public class Customer {
 
     public void setCidade(String cidade){this.cidade = cidade;}
 
-    public int getCep(){return cep;}
+    public String getCep(){return cep;}
 
-    public void setCep(int cep){this.cep = cep;}
+    public void setCep(String cep){this.cep = cep;}
 
     public int getNro(){return nro;}
 
     public void setNro(int nro){this.nro = nro;}
 
+    public String getEndereco(){return endereco;}
+
+    public void setEndereco(String endereco){this.endereco = endereco;}
 }

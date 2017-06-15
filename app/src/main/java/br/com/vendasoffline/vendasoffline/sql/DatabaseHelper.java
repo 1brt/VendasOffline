@@ -46,6 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CUSTOMER_CIDADE = "CLA001_CIDADE";
     private static final String COLUMN_CUSTOMER_CEP = "CLA001_CEP";
     private static final String COLUMN_CUSTOMER_NRO = "CLA001_NRO";
+    private static final String COLUMN_CUSTOMER_ENDERECO = "CLA001_ENDERECO";
 
     // create User table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -61,8 +62,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_CUSTOMER_PAIS + " TEXT," +
             COLUMN_CUSTOMER_UF + " TEXT," +
             COLUMN_CUSTOMER_CIDADE + " TEXT," +
-            COLUMN_CUSTOMER_CEP + " INTEGER," +
-            COLUMN_CUSTOMER_NRO + " INTEGER)";
+            COLUMN_CUSTOMER_CEP + " TEXT," +
+            COLUMN_CUSTOMER_NRO + " INTEGER," +
+            COLUMN_CUSTOMER_ENDERECO + " TEXT)";
 
     // drop User table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -363,6 +365,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CUSTOMER_CIDADE, cliente.getCidade());
         values.put(COLUMN_CUSTOMER_CEP, cliente.getCep());
         values.put(COLUMN_CUSTOMER_NRO, cliente.getNro());
+        values.put(COLUMN_CUSTOMER_ENDERECO, cliente.getEndereco());
 
         // Inserting Row
         db.insert(TABLE_CUSTOMER, null, values);
