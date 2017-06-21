@@ -60,82 +60,82 @@
     <string name="prompt_uf">País</string>
 
     <string-array name="array_paises">
-        <item>Afghanistan</item>
+        <item>Afeganistão</item>
         <item>Albania</item>
-        <item>Algeria</item>
-        <item>American Samoa</item>
+        <item>Argélia</item>
+        <item>Samoa Americana</item>
         <item>Andorra</item>
         <item>Angola</item>
-        <item>Anguilla</item>
-        <item>Antarctica</item>
-        <item>Antigua and Barbuda</item>
+        <item>Anguila</item>
+        <item>Antártica</item>
+        <item>Antígua e Barbuda</item>
         <item>Argentina</item>
-        <item>Armenia</item>
+        <item>Armênia</item>
         <item>Aruba</item>
-        <item>Australia</item>
-        <item>Austria</item>
-        <item>Azerbaijan</item>
+        <item>Austrália</item>
+        <item>Áustria</item>
+        <item>Azerbaijão</item>
         <item>Bahrain</item>
         <item>Bangladesh</item>
         <item>Barbados</item>
         <item>Belarus</item>
-        <item>Belgium</item>
+        <item>Bélgica</item>
         <item>Belize</item>
         <item>Benin</item>
-        <item>Bermuda</item>
-        <item>Bhutan</item>
-        <item>Bolivia</item>
-        <item>Bosnia and Herzegovina</item>
+        <item>Bermudas</item>
+        <item>Butão</item>
+        <item>Bolívia</item>
+        <item>Bosnia e Herzegovina</item>
         <item>Botswana</item>
-        <item>Bouvet Island</item>
+        <item>Ilha de Bouvet</item>
         <item>Brasil</item>
-        <item>British Indian Ocean Territory</item>
-        <item>British Virgin Islands</item>
+        <item>Território Britânico do Oceano Índico</item>
+        <item>Ilhas Virgens Britânicas</item>
         <item>Brunei</item>
-        <item>Bulgaria</item>
+        <item>Bulgária</item>
         <item>Burkina Faso</item>
         <item>Burundi</item>
-        <item>Cambodia</item>
-        <item>Cameroon</item>
+        <item>Camboja</item>
+        <item>Camarões</item>
         <item>Canada</item>
-        <item>Cape Verde</item>
-        <item>Cayman Islands</item>
-        <item>Central African Republic</item>
-        <item>Chad</item>
+        <item>Cabo Verde</item>
+        <item>Ilhas Cayman</item>
+        <item>República Centro Africana</item>
+        <item>Chade</item>
         <item>Chile</item>
         <item>China</item>
-        <item>Christmas Island</item>
-        <item>Cocos (Keeling) Islands</item>
-        <item>Colombia</item>
-        <item>Comoros</item>
+        <item>Ilha do Natal</item>
+        <item>Ilhas Cocos</item>
+        <item>Colômbia</item>
+        <item>Comores</item>
         <item>Congo</item>
-        <item>Cook Islands</item>
+        <item>Ilhas Cook</item>
         <item>Costa Rica</item>
-        <item>Cote d\'Ivoire</item>
-        <item>Croatia</item>
+        <item>Costa do Marfim</item>
+        <item>Croácia</item>
         <item>Cuba</item>
         <item>Cyprus</item>
-        <item>Czech Republic</item>
-        <item>Democratic Republic of the Congo</item>
-        <item>Denmark</item>
+        <item>República Tcheca</item>
+        <item>República Democrática do Congo</item>
+        <item>Dinamarca</item>
         <item>Djibouti</item>
         <item>Dominica</item>
-        <item>Dominican Republic</item>
-        <item>East Timor</item>
-        <item>Ecuador</item>
-        <item>Egypt</item>
+        <item>República Dominicana</item>
+        <item>Timor Leste</item>
+        <item>Equador</item>
+        <item>Egíto</item>
         <item>El Salvador</item>
-        <item>Equatorial Guinea</item>
-        <item>Eritrea</item>
-        <item>Estonia</item>
-        <item>Ethiopia</item>
-        <item>Faeroe Islands</item>
-        <item>Falkland Islands</item>
+        <item>Guiné Equatorial</item>
+        <item>Eritréia</item>
+        <item>Estônia</item>
+        <item>Etiópia</item>
+        <item>Ilhas Faroe</item>
+        <item>Ilhas Falkland</item>
         <item>Fiji</item>
-        <item>Finland</item>
-        <item>Former Yugoslav Republic of Macedonia</item>
-        <item>France</item>
-        <item>French Guiana</item>
+        <item>Finlândia</item>
+        <item>Antiga República jugoslava da Macedónia</item>
+        <item>França</item>
+        <item>Guiana Francesa</item>
         <item>French Polynesia</item>
         <item>French Southern Territories</item>
         <item>Gabon</item>
