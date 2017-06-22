@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.TypedArray;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -19,29 +18,21 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Toast;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
 import br.com.vendasoffline.vendasoffline.R;
-import br.com.vendasoffline.vendasoffline.activities.RegisterActivity;
-import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
@@ -138,6 +129,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
                 insereCliente();
                 break;
             case R.id.btnCancelar:
+                locationManager.removeUpdates(locationListener);
                 FragmentManager fm = getFragmentManager();
                 fm.popBackStackImmediate();
                 break;
@@ -162,8 +154,8 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         cliente.setTipoPessoa(tipo);
         cliente.setCnpj(edtxtCnpj.getText().toString().trim());
-        cliente.setPais(spnPais.getTransitionName());
-        cliente.setUf(spnUf.getTransitionName());
+        cliente.setPais((String) spnPais.getSelectedItem());
+        cliente.setUf((String) spnUf.getSelectedItem());
         cliente.setCidade(edtxtCidade.getText().toString().trim());
         cliente.setCep(edtxtCep.getText().toString().trim());
         cliente.setNro(Integer.parseInt(edtxtNro.getText().toString().trim()));

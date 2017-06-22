@@ -124,18 +124,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @return list
      */
-    public List<User> getAllUser() {
+    public Cursor getClientes() {
         // array of columns to fetch
         String[] columns = {
-                COLUMN_USER_ID,
-                COLUMN_USER,
-                COLUMN_USER_EMAIL,
-                COLUMN_USER_NAME,
-                COLUMN_USER_PASSWORD
+                COLUMN_CUSTOMER_ID+" as _id",
+                COLUMN_CUSTOMER_NOME,
+                COLUMN_CUSTOMER_TIPOPESSOA,
+                COLUMN_CUSTOMER_CNPJ,
+                COLUMN_CUSTOMER_CIDADE,
+                COLUMN_CUSTOMER_UF,
         };
         // sorting orders
         String sortOrder =
-                COLUMN_USER_NAME + " ASC";
+                COLUMN_CUSTOMER_NOME + " ASC";
         List<User> userList = new ArrayList<User>();
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -146,7 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
          * SQL query equivalent to this query function is
          * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
          */
-        Cursor cursor = db.query(TABLE_USER, //Table to query
+        Cursor cursor = db.query(TABLE_CUSTOMER, //Table to query
                 columns,    //columns to return
                 null,        //columns for the WHERE clause
                 null,        //The values for the WHERE clause
@@ -154,25 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,       //filter by row groups
                 sortOrder); //The sort order
 
-
-        // Traversing through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                User user = new User();
-                user.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID))));
-                user.setNome(cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)));
-                user.setUsuario(cursor.getString(cursor.getColumnIndex(COLUMN_USER)));
-                user.setEmail(cursor.getString(cursor.getColumnIndex(COLUMN_USER_EMAIL)));
-                user.setSenha(cursor.getString(cursor.getColumnIndex(COLUMN_USER_PASSWORD)));
-                // Adding user record to list
-                userList.add(user);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-
-        // return user list
-        return userList;
+        return cursor;
     }
 
     /**

@@ -49,6 +49,9 @@
 
         <activity android:name=".activities.RegisterActivity"
             android:windowSoftInputMode="adjustResize"></activity>
+
+        <activity android:name=".activities.ListCliente"/>
+
     </application>
 
 </manifest>

@@ -25,6 +25,8 @@
     <string name="hint_usuario">Usuário</string>
     <string name="hint_password">Senha</string>
     <string name="hint_confirm_password">Confirme a senha</string>
+    <string name="hint_tipo_pessoa">Tipo Pessoa</string>
+    <string name="hint_uf">UF</string>
     <string name="text_login">Login</string>
     <string name="text_register">Registrar</string>
     <string name="btn_cadastro">Cadastrar</string>
