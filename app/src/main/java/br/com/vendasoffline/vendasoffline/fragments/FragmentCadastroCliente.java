@@ -63,6 +63,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private LocationListener locationListener;
     private List<String> lstPaises;
     private List<String> lstUfs;
+    private List<String> lstUfsAbrev;
     private SharedPreferences prefs;
 
     @Override
@@ -105,13 +106,16 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private void initObjects() {
         databaseHelper = new DatabaseHelper(getActivity());
         cliente = new Customer();
+
         locationManager = (LocationManager)
                 getContext().getSystemService(Context.LOCATION_SERVICE);
 
         // O getResources().getStringArray(R.array.array_paises) retorna um String[].
-        lstPaises = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.array_paises)));
+        lstPaises = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_paises)));
 
-        lstUfs = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.array_uf)));
+        lstUfs = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_uf)));
+
+        lstUfsAbrev = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_uf_abrev)));
 
         prefs = getContext().getSharedPreferences("br.com.vendasoffline.vendasoffline", MODE_PRIVATE);
 
@@ -155,7 +159,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         cliente.setTipoPessoa(tipo);
         cliente.setCnpj(edtxtCnpj.getText().toString().trim());
         cliente.setPais((String) spnPais.getSelectedItem());
-        cliente.setUf((String) spnUf.getSelectedItem());
+        cliente.setUf(lstUfsAbrev.get(spnUf.getSelectedItemPosition()));
         cliente.setCidade(edtxtCidade.getText().toString().trim());
         cliente.setCep(edtxtCep.getText().toString().trim());
         cliente.setNro(Integer.parseInt(edtxtNro.getText().toString().trim()));
@@ -183,7 +187,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     }
 
     private void getLocation() {
+
         locationListener = new MyLocationListener();
+
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -196,8 +202,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             buildAlertMessageNoGps();
         }
 
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 5000, /*10*/0, locationListener);
+        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener,null);
     }
 
     private class MyLocationListener implements LocationListener {
@@ -205,7 +210,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         @Override
         public void onLocationChanged(Location loc) {
 
-        /*------- To get city name from coordinates -------- */
+        //------- To get city name from coordinates --------
             String cityName="";
             String postalCode="";
             String pais="";
@@ -235,8 +240,6 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             edtxtCidade.setText(cityName);
             edtxtEndereco.setText(endereco);
             edtxtCep.setText(postalCode);
-
-            locationManager.removeUpdates(locationListener);
         }
 
         @Override
