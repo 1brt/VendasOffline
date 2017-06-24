@@ -1,9 +1,11 @@
 package br.com.vendasoffline.vendasoffline.activities;
 
 import android.Manifest;
+import android.accessibilityservice.GestureDescription;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -51,6 +54,8 @@ import java.util.Set;
 
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroCliente;
+import br.com.vendasoffline.vendasoffline.helpers.Utils;
+import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.User;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
@@ -70,7 +75,8 @@ public class MainActivity extends AppCompatActivity
     private DatabaseHelper databaseHelper;
     private File folder;
     private SharedPreferences prefs;
-
+    private ProgressDialog load;
+    private GetJson download;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -310,6 +316,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_pedidos) {
 
         } else if (id == R.id.nav_sincronizar) {
+            // Faz sincronização com o webservice.
+            (new GetJson()).execute();
 
         }/* else if (id == R.id.nav_manage) {
 
@@ -347,6 +355,10 @@ public class MainActivity extends AppCompatActivity
             retorno = false;
         }
 
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
         return retorno;
     }
 
@@ -360,7 +372,9 @@ public class MainActivity extends AppCompatActivity
             // Do first run stuff here then set 'firstrun' as false
             // using the following line to edit/commit prefs
             firstRun = true;
-            prefs.edit().putBoolean("firstrun", false).commit();
+            if (hasAllPermissions()){
+                prefs.edit().putBoolean("firstrun", false).commit();
+            }
         }
 
         if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !firstRun) {
@@ -425,5 +439,42 @@ public class MainActivity extends AppCompatActivity
                 imgvUsuario.setImageBitmap(photo);
 
             }
+    }
+
+    private class GetJson extends AsyncTask<Void, Void, Customer> {
+
+        @Override
+        protected void onPreExecute(){
+            load = ProgressDialog.show(MainActivity.this, "Por favor Aguarde ...", "Recuperando Informações do Servidor...");
+        }
+
+        @Override
+        protected Customer doInBackground(Void... params) {
+
+            Utils util = new Utils();
+            Customer c;
+            c=util.getInformacao("https://randomuser.me/api/");
+            c.setPais("sdioasjd");
+            c.setTipoPessoa("J");
+
+            databaseHelper.addCustomer(c);
+            return c;
+        }
+
+        @Override
+        protected void onPostExecute(Customer cliente){
+            String nome;
+            String endereco;
+            String cidade;
+            String uf;
+
+            nome = cliente.getNome().substring(0,1).toUpperCase() + cliente.getNome().substring(1);
+
+            endereco = cliente.getEndereco();
+            cidade = cliente.getCidade().substring(0,1).toUpperCase()+cliente.getCidade().substring(1);
+            uf = cliente.getUf();
+
+            load.dismiss();
+        }
     }
 }

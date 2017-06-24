@@ -15,10 +15,13 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,12 +48,19 @@ import static android.content.Context.MODE_PRIVATE;
 public class FragmentCadastroCliente extends Fragment implements View.OnClickListener {
     private final static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private View view;
-    private EditText edtxtNome;
-    private EditText edtxtCnpj;
-    private EditText edtxtCidade;
-    private EditText edtxtCep;
-    private EditText edtxtNro;
-    private EditText edtxtEndereco;
+    private TextInputLayout textInputLytNome;
+    private TextInputLayout textInputLytCnpj;
+    private TextInputLayout textInputLytCidade;
+    private TextInputLayout textInputLytCep;
+    private TextInputLayout textInputLytNro;
+    private TextInputLayout textInputLytEndereco;
+
+    private TextInputEditText textInputEdtxtNome;
+    private TextInputEditText textInputEdtxtCnpj;
+    private TextInputEditText textInputEdtxtCidade;
+    private TextInputEditText textInputEdtxtCep;
+    private TextInputEditText textInputEdtxtNro;
+    private TextInputEditText textInputEdtxtEndereco;
     private RadioGroup rdgTipoPessoa;
     private Spinner spnPais;
     private Spinner spnUf;
@@ -65,6 +75,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private List<String> lstUfs;
     private List<String> lstUfsAbrev;
     private SharedPreferences prefs;
+    private InputValidation inputValidation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,19 +90,29 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     }
 
     private void initViews() {
-        edtxtNome = (EditText) view.findViewById(R.id.edtxtNome);
-        edtxtCnpj = (EditText) view.findViewById(R.id.edtxtCnpj);
-        edtxtCidade = (EditText) view.findViewById(R.id.edtxtCidade);
-        edtxtCep = (EditText) view.findViewById(R.id.edtxtCep);
-        edtxtNro = (EditText) view.findViewById(R.id.edtxtNro);
-        edtxtNome = (EditText) view.findViewById(R.id.edtxtNome);
-        edtxtEndereco = (EditText) view.findViewById(R.id.edtxtEndereco);
+
+        textInputLytNome = (TextInputLayout) view.findViewById(R.id.textInputLytNome);
+        textInputLytCnpj = (TextInputLayout) view.findViewById(R.id.textInputLytCnpj);
+        textInputLytCidade = (TextInputLayout) view.findViewById(R.id.textInputLytCidade);
+        textInputLytCep = (TextInputLayout) view.findViewById(R.id.textInputLytCep);
+        textInputLytNro = (TextInputLayout) view.findViewById(R.id.textInputLytNro);
+        textInputLytEndereco = (TextInputLayout) view.findViewById(R.id.textInputLytEndereco);
+
+        textInputEdtxtNome = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNome);
+        textInputEdtxtNome.requestFocus();
+
+        textInputEdtxtCnpj = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCnpj);
+        textInputEdtxtCidade = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCidade);
+        textInputEdtxtCep = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCep);
+        textInputEdtxtNro = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNro);
+        textInputEdtxtEndereco = (TextInputEditText) view.findViewById(R.id.textInputEdtxtEndereco);
         rdgTipoPessoa = (RadioGroup) view.findViewById(R.id.rdgTipoPessoa);
         spnPais = (Spinner) view.findViewById(R.id.spnPais);
         spnUf = (Spinner) view.findViewById(R.id.spnUF);
         btnCadastrar = (Button) view.findViewById(R.id.btnCadastrar);
         btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
         btnGPS = (ImageButton) view.findViewById(R.id.btnGPS);
+
     }
 
     private void initListeners() {
@@ -119,6 +140,10 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         prefs = getContext().getSharedPreferences("br.com.vendasoffline.vendasoffline", MODE_PRIVATE);
 
+        locationListener = new MyLocationListener();
+
+        inputValidation = new InputValidation(getContext());
+
     }
 
     /**
@@ -133,7 +158,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
                 insereCliente();
                 break;
             case R.id.btnCancelar:
-                locationManager.removeUpdates(locationListener);
+                removeUpdates();
                 FragmentManager fm = getFragmentManager();
                 fm.popBackStackImmediate();
                 break;
@@ -143,27 +168,38 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         }
     }
 
+    @Override
+    public void onDestroy() {
+        removeUpdates();
+        super.onDestroy();
+    }
+
     private void insereCliente() {
         String tipo = "";
+        if (!inputValidation.isInputEditTextFilled(textInputEdtxtNome, textInputLytNome, getString(R.string.error_message_name))) {
+            textInputEdtxtNome.requestFocus();
+            return;
+        }else if (!inputValidation.isInputEditTextFilled(textInputEdtxtCnpj, textInputLytCnpj, getString(R.string.error_message_name))) {
+            textInputEdtxtCnpj.requestFocus();
+            return;
+        }
 
-        // TODO Fazer verificação dos campos, para ver se não são nulos.
-
-        cliente.setNome(edtxtNome.getText().toString().trim());
+        cliente.setNome(textInputEdtxtNome.getText().toString().trim());
 
         if (rdgTipoPessoa.getCheckedRadioButtonId() == R.id.rdbFisica) {
-            tipo = "F";
+            tipo = "Física";
         } else if (rdgTipoPessoa.getCheckedRadioButtonId() == R.id.rdbJuridica) {
-            tipo = "J";
+            tipo = "Jurídica";
         }
 
         cliente.setTipoPessoa(tipo);
-        cliente.setCnpj(edtxtCnpj.getText().toString().trim());
+        cliente.setCnpj(textInputEdtxtCnpj.getText().toString().trim());
         cliente.setPais((String) spnPais.getSelectedItem());
         cliente.setUf(lstUfsAbrev.get(spnUf.getSelectedItemPosition()));
-        cliente.setCidade(edtxtCidade.getText().toString().trim());
-        cliente.setCep(edtxtCep.getText().toString().trim());
-        cliente.setNro(Integer.parseInt(edtxtNro.getText().toString().trim()));
-        cliente.setEndereco(edtxtEndereco.getText().toString().trim());
+        cliente.setCidade(textInputEdtxtCidade.getText().toString().trim());
+        cliente.setCep(textInputEdtxtCep.getText().toString().trim());
+        cliente.setNro(Integer.parseInt(textInputEdtxtNro.getText().toString().trim()));
+        cliente.setEndereco(textInputEdtxtEndereco.getText().toString().trim());
 
         databaseHelper.addCustomer(cliente);
 
@@ -174,21 +210,19 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     }
 
     private void emptyInputEditText() {
-        edtxtNome.setText(null);
-        edtxtCnpj.setText(null);
-        edtxtCidade.setText(null);
-        edtxtCep.setText(null);
-        edtxtNro.setText(null);
-        edtxtEndereco.setText(null);
+        textInputEdtxtNome.setText(null);
+        textInputEdtxtCnpj.setText(null);
+        textInputEdtxtCidade.setText(null);
+        textInputEdtxtCep.setText(null);
+        textInputEdtxtNro.setText(null);
+        textInputEdtxtEndereco.setText(null);
         rdgTipoPessoa.check(R.id.rdbFisica);
         spnPais.setSelection(0);
         spnUf.setSelection(0);
-        edtxtNome.requestFocus();
+        textInputEdtxtNome.requestFocus();
     }
 
     private void getLocation() {
-
-        locationListener = new MyLocationListener();
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -237,9 +271,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
             spnPais.setSelection(lstPaises.indexOf(pais));
             spnUf.setSelection(lstUfs.indexOf(uf));
-            edtxtCidade.setText(cityName);
-            edtxtEndereco.setText(endereco);
-            edtxtCep.setText(postalCode);
+            textInputEdtxtCidade.setText(cityName);
+            textInputEdtxtEndereco.setText(endereco);
+            textInputEdtxtCep.setText(postalCode);
         }
 
         @Override
@@ -273,6 +307,25 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     }
 
     @TargetApi(Build.VERSION_CODES.M)
+    public boolean hasAllPermissions(){
+        boolean retorno = true;
+
+        if (getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
+        if (getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
+        if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
+        return retorno;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
     public void requestAllPermissions(){
         String permis = "Você precisa permitir o acesso ao(s) seguinte(s) recurso(s): \n";
         Boolean comPermis = true;
@@ -282,7 +335,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             // Do first run stuff here then set 'firstrun' as false
             // using the following line to edit/commit prefs
             firstRun = true;
-            prefs.edit().putBoolean("firstrun", false).commit();
+            if (hasAllPermissions()){
+                prefs.edit().putBoolean("firstrun", false).commit();
+            }
         }
 
         if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) && !hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) && !firstRun) {
@@ -320,5 +375,8 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         alert.show();
     }
 
+    private void removeUpdates(){
+        locationManager.removeUpdates(locationListener);
+    }
 }
 

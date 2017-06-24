@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:paddingTop="@dimen/padding_top_cadastro_cliente"
     android:background="@color/colorBackground"
-    android:weightSum="5"
+    android:weightSum="6"
     android:orientation="vertical">
 
     <LinearLayout
@@ -15,7 +15,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <EditText
+        <!--<EditText
             android:id="@+id/edtxtNome"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -23,7 +23,17 @@
             android:ems="10"
             android:maxLength="60"
             android:inputType="textCapSentences"
-            android:hint="@string/hint_nome" />
+            android:hint="@string/hint_nome" />-->
+
+        <!--<EditText
+            android:id="@+id/edtxtCnpj"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ems="10"
+            android:maxLength="15"
+            android:inputType="textCapSentences"
+            android:hint="@string/hint_cpf" />-->
 
         <RadioGroup
             android:id="@+id/rdgTipoPessoa"
@@ -50,23 +60,64 @@
 
         </RadioGroup>
 
-        <EditText
-            android:id="@+id/edtxtCnpj"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLytNome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEdtxtNome"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:hint="@string/hint_nome"
+                android:inputType="textCapSentences"
+                android:maxLength="60"
+                android:maxLines="1" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLytCnpj"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEdtxtCnpj"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:hint="@string/hint_cpf"
+                android:inputType="textCapSentences"
+                android:maxLength="15"
+                android:maxLines="1" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:ems="10"
-            android:maxLength="15"
-            android:inputType="textCapSentences"
-            android:hint="@string/hint_cpf" />
+            android:weightSum="7"
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/btnGPS"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorBackground"
-            app:srcCompat="@drawable/ic_my_location_black" />
+            <ImageButton
+                android:id="@+id/btnGPS"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:backgroundTint="@color/colorBackground"
+                app:srcCompat="@drawable/ic_my_location_black" />
+
+            <TextView
+                android:id="@+id/txtLocalizacao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/text_localizacao"
+                android:textSize="17sp" />
+        </LinearLayout>
 
         <Spinner
             android:id="@+id/spnPais"
@@ -84,7 +135,7 @@
             android:entries="@array/array_uf"
             android:prompt="@string/prompt_uf"/>
 
-        <EditText
+        <!--<EditText
             android:id="@+id/edtxtCidade"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -92,9 +143,26 @@
             android:ems="10"
             android:maxLength="60"
             android:inputType="textCapSentences"
-            android:hint="@string/hint_cidade" />
+            android:hint="@string/hint_cidade" />-->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLytCidade"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-        <EditText
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEdtxtCidade"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:maxLines="1"
+                android:maxLength="60"
+                android:inputType="textCapSentences"
+                android:hint="@string/hint_cidade" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!--<EditText
             android:id="@+id/edtxtEndereco"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -102,7 +170,24 @@
             android:ems="10"
             android:maxLength="60"
             android:inputType="textCapSentences"
-            android:hint="@string/hint_endereco"/>
+            android:hint="@string/hint_endereco"/>-->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLytEndereco"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEdtxtEndereco"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:maxLines="1"
+                android:maxLength="60"
+                android:inputType="textCapSentences"
+                android:hint="@string/hint_endereco" />
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -111,7 +196,7 @@
             android:orientation="horizontal"
             android:weightSum="3">
 
-            <EditText
+            <!--<EditText
                 android:id="@+id/edtxtCep"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -119,9 +204,26 @@
                 android:ems="10"
                 android:hint="@string/hint_cep"
                 android:inputType="textPostalAddress"
-                android:maxLength="10" />
+                android:maxLength="10" />-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textInputLytCep"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-            <EditText
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/textInputEdtxtCep"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:maxLines="1"
+                    android:maxLength="10"
+                    android:inputType="textPostalAddress"
+                    android:hint="@string/hint_cep"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <!--<EditText
                 android:id="@+id/edtxtNro"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -129,7 +231,24 @@
                 android:ems="10"
                 android:hint="@string/hint_nro"
                 android:inputType="number"
-                android:maxLength="6" />
+                android:maxLength="6" />-->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textInputLytNro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/textInputEdtxtNro"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:ems="10"
+                    android:maxLines="1"
+                    android:maxLength="6"
+                    android:inputType="number"
+                    android:hint="@string/hint_nro"/>
+            </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -137,7 +256,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="5"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/padding_bottom_cadastro_cliente"

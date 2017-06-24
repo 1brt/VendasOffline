@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
-
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import br.com.vendasoffline.vendasoffline.model.User;
