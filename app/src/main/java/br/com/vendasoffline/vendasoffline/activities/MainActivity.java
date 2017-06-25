@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity
 
             if (hasAllPermissions()){
                 vibrate();
+                menu.setHeaderTitle("Selecione uma Opção");
                 String[] menuItems = new String[] {"Câmera","Galeria"};
                 for (int i = 0; i<menuItems.length; i++) {
                     menu.add(Menu.NONE, i, i, menuItems[i]);

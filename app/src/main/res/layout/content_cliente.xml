@@ -8,10 +8,19 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_cliente">
 
+    <EditText
+        android:id="@+id/edtConsulta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:maxLength="20"
+        android:hint="@string/hint_pesquisa"
+        android:inputType="textPersonName"
+        android:textSize="24sp" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical" />
-
 </LinearLayout>

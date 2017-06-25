@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/hint_nome"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/colorTextDark" />
 
         </LinearLayout>
 
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/hint_tipo_pessoa"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/colorTextDark" />
 
         </LinearLayout>
 
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/hint_cpf"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@color/colorTextDark" />
         </LinearLayout>
 
         <LinearLayout
@@ -107,20 +107,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/hint_cidade"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="@color/colorTextDark" />
 
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" - " />
+                    android:text=" - "
+                    android:textColor="@color/colorTextDark" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/txtUf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/hint_uf"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="@color/colorTextDark" />
 
             </LinearLayout>
 

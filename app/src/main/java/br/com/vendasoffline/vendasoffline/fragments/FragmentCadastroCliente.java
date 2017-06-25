@@ -25,6 +25,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
+import br.com.vendasoffline.vendasoffline.activities.ListCliente;
 import br.com.vendasoffline.vendasoffline.activities.MainActivity;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import android.view.LayoutInflater;
@@ -166,7 +167,6 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
                 insereCliente();
                 break;
             case R.id.btnCancelar:
-                removeUpdates();
                 FragmentManager fm = getFragmentManager();
                 fm.popBackStackImmediate();
                 break;
@@ -178,6 +178,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
     @Override
     public void onDestroy() {
+        ((ListCliente) getActivity()).getClientes();
         removeUpdates();
         super.onDestroy();
     }
@@ -200,6 +201,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             tipo = "Jurídica";
         }
 
+        // TODO: Testar se os campos não não nulos, para não dar pau no toString.
         cliente.setTipoPessoa(tipo);
         cliente.setCnpj(textInputEdtxtCnpj.getText().toString().trim());
         cliente.setPais((String) spnPais.getSelectedItem());
@@ -237,13 +239,6 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                load = ProgressDialog.show(getContext(), "Por favor Aguarde ...", "Recuperando Informações do GPS...");
-            }
-        });
-
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -254,7 +249,16 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             buildAlertMessageNoGps();
+
+            return;
         }
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                load = ProgressDialog.show(getContext(), "Por favor Aguarde ...", "Recuperando Informações do GPS...");
+            }
+        });
 
         locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener,null);
     }

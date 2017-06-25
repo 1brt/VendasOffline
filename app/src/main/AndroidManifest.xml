@@ -51,7 +51,8 @@
         <activity android:name=".activities.RegisterActivity"
             android:windowSoftInputMode="adjustResize"></activity>
 
-        <activity android:name=".activities.ListCliente"/>
+        <activity android:name=".activities.ListCliente"
+            android:windowSoftInputMode="adjustPan"/>
 
     </application>
 

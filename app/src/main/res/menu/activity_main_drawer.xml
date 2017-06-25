@@ -3,24 +3,16 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_clientes"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_menu_cliente"
             android:title="@string/navigation_drawer_clientes" />
         <item
             android:id="@+id/nav_pedidos"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_pedido"
             android:title="@string/navigation_drawer_pedidos"/>
         <item
             android:id="@+id/nav_sincronizar"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@android:drawable/ic_popup_sync"
             android:title="@string/navigation_drawer_sincronizar"/>
-        <!--<item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />-->
     </group>
 
 

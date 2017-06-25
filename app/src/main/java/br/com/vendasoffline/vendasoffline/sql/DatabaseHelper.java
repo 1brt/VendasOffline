@@ -158,6 +158,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getClientes(String whereClause,String[] whereArgs) {
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_CUSTOMER_ID+" as _id",
+                COLUMN_CUSTOMER_NOME,
+                COLUMN_CUSTOMER_TIPOPESSOA,
+                COLUMN_CUSTOMER_CNPJ,
+                COLUMN_CUSTOMER_CIDADE,
+                COLUMN_CUSTOMER_UF,
+        };
+
+        // sorting orders
+        String sortOrder =
+                COLUMN_CUSTOMER_NOME + " ASC";
+        List<User> userList = new ArrayList<User>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // query the user table
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
+         */
+
+        Cursor cursor = db.query(TABLE_CUSTOMER, //Table to query
+                columns,     //columns to return
+                whereClause, //columns for the WHERE clause
+                whereArgs,   //The values for the WHERE clause
+                null,       //group the rows
+                null,       //filter by row groups
+                sortOrder); //The sort order
+
+        return cursor;
+    }
+
     /**
      * This method is to fetch all user and return the list of user records
      *
