@@ -2,6 +2,7 @@ package br.com.vendasoffline.vendasoffline.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -21,12 +24,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+
+import br.com.vendasoffline.vendasoffline.activities.MainActivity;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -50,10 +55,10 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private View view;
     private TextInputLayout textInputLytNome;
     private TextInputLayout textInputLytCnpj;
-    private TextInputLayout textInputLytCidade;
+    /*private TextInputLayout textInputLytCidade;
     private TextInputLayout textInputLytCep;
     private TextInputLayout textInputLytNro;
-    private TextInputLayout textInputLytEndereco;
+    private TextInputLayout textInputLytEndereco;*/
 
     private TextInputEditText textInputEdtxtNome;
     private TextInputEditText textInputEdtxtCnpj;
@@ -76,6 +81,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private List<String> lstUfsAbrev;
     private SharedPreferences prefs;
     private InputValidation inputValidation;
+    private ProgressDialog load;
+
+    private Handler handler = new Handler();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,10 +101,10 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         textInputLytNome = (TextInputLayout) view.findViewById(R.id.textInputLytNome);
         textInputLytCnpj = (TextInputLayout) view.findViewById(R.id.textInputLytCnpj);
-        textInputLytCidade = (TextInputLayout) view.findViewById(R.id.textInputLytCidade);
+        /*textInputLytCidade = (TextInputLayout) view.findViewById(R.id.textInputLytCidade);
         textInputLytCep = (TextInputLayout) view.findViewById(R.id.textInputLytCep);
         textInputLytNro = (TextInputLayout) view.findViewById(R.id.textInputLytNro);
-        textInputLytEndereco = (TextInputLayout) view.findViewById(R.id.textInputLytEndereco);
+        textInputLytEndereco = (TextInputLayout) view.findViewById(R.id.textInputLytEndereco);*/
 
         textInputEdtxtNome = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNome);
         textInputEdtxtNome.requestFocus();
@@ -224,6 +232,18 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
     private void getLocation() {
 
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                load = ProgressDialog.show(getContext(), "Por favor Aguarde ...", "Recuperando Informações do GPS...");
+            }
+        });
+
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -262,7 +282,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
                     cityName = addresses.get(0).getLocality();
                     postalCode = addresses.get(0).getPostalCode();
                     endereco = addresses.get(0).getAddressLine(0).toString();
-                    endereco = endereco.substring(0,endereco.indexOf(","));
+                    if (endereco.contains(",")){
+                        endereco = endereco.substring(0,endereco.indexOf(","));
+                    }
                 }
             }
             catch (IOException e) {
@@ -274,6 +296,8 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             textInputEdtxtCidade.setText(cityName);
             textInputEdtxtEndereco.setText(endereco);
             textInputEdtxtCep.setText(postalCode);
+
+            load.dismiss();
         }
 
         @Override

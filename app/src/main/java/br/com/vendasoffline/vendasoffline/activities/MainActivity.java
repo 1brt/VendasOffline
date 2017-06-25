@@ -72,11 +72,11 @@ public class MainActivity extends AppCompatActivity
     private User usuario;
     private ImageView imgvUsuario;
     private TextView txtNomeUsuario;
+    private TextView txtNomeEmail;
     private DatabaseHelper databaseHelper;
     private File folder;
     private SharedPreferences prefs;
     private ProgressDialog load;
-    private GetJson download;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +138,11 @@ public class MainActivity extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         imgvUsuario = (ImageView) hView.findViewById(R.id.imgvFotoUsuario);
         txtNomeUsuario = (TextView) hView.findViewById(R.id.txtNomeUsuario);
+        txtNomeEmail = (TextView) hView.findViewById(R.id.txtNomeEmail);
 
         if (usuario != null){
             txtNomeUsuario.setText(usuario.getNome());
+            txtNomeEmail.setText(usuario.getEmail());
         }
 
         carregaImagemUsuario();
@@ -463,17 +465,6 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Customer cliente){
-            String nome;
-            String endereco;
-            String cidade;
-            String uf;
-
-            nome = cliente.getNome().substring(0,1).toUpperCase() + cliente.getNome().substring(1);
-
-            endereco = cliente.getEndereco();
-            cidade = cliente.getCidade().substring(0,1).toUpperCase()+cliente.getCidade().substring(1);
-            uf = cliente.getUf();
-
             load.dismiss();
         }
     }

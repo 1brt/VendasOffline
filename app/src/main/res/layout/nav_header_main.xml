@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/side_nav_bar"
+    android:background="@drawable/side_nav_bar_image"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -13,16 +13,32 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgvFotoUsuario"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
         android:elevation="1dp"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:paddingTop="@dimen/nav_header_imgvertical_spacing"
         app:srcCompat="@drawable/ic_empty_profile" />
+
+    <!--<ImageView
+        android:id="@+id/imgvFotoUsuario"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:elevation="1dp"
+        android:paddingTop="@dimen/nav_header_imgvertical_spacing"
+        app:srcCompat="@drawable/ic_empty_profile" />-->
 
     <TextView
         android:id="@+id/txtNomeUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/txtNomeEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
