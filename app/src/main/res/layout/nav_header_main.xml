@@ -19,7 +19,7 @@
         android:layout_height="100dp"
         android:elevation="1dp"
         android:paddingTop="@dimen/nav_header_imgvertical_spacing"
-        app:srcCompat="@drawable/ic_empty_profile" />
+        android:src="@drawable/ic_empty_profile" />
 
     <!--<ImageView
         android:id="@+id/imgvFotoUsuario"

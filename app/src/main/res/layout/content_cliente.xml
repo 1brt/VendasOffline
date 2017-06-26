@@ -16,7 +16,8 @@
         android:maxLength="20"
         android:hint="@string/hint_pesquisa"
         android:inputType="textPersonName"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:drawableLeft="@android:drawable/ic_menu_search"/>
 
     <ListView
         android:id="@+id/listView"

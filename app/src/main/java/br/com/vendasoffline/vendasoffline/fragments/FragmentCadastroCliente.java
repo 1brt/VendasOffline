@@ -27,6 +27,7 @@ import android.support.v7.app.AlertDialog;
 
 import br.com.vendasoffline.vendasoffline.activities.ListCliente;
 import br.com.vendasoffline.vendasoffline.activities.MainActivity;
+import br.com.vendasoffline.vendasoffline.classes.Permission;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +74,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private Button btnCadastrar;
     private Button btnCancelar;
     private ImageButton btnGPS;
+
     private Customer cliente;
     private DatabaseHelper databaseHelper;
     private LocationManager locationManager;
@@ -83,8 +85,8 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private SharedPreferences prefs;
     private InputValidation inputValidation;
     private ProgressDialog load;
-
-    private Handler handler = new Handler();
+    private Permission permis;
+    private Handler handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,14 +104,8 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         textInputLytNome = (TextInputLayout) view.findViewById(R.id.textInputLytNome);
         textInputLytCnpj = (TextInputLayout) view.findViewById(R.id.textInputLytCnpj);
-        /*textInputLytCidade = (TextInputLayout) view.findViewById(R.id.textInputLytCidade);
-        textInputLytCep = (TextInputLayout) view.findViewById(R.id.textInputLytCep);
-        textInputLytNro = (TextInputLayout) view.findViewById(R.id.textInputLytNro);
-        textInputLytEndereco = (TextInputLayout) view.findViewById(R.id.textInputLytEndereco);*/
-
         textInputEdtxtNome = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNome);
         textInputEdtxtNome.requestFocus();
-
         textInputEdtxtCnpj = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCnpj);
         textInputEdtxtCidade = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCidade);
         textInputEdtxtCep = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCep);
@@ -152,6 +148,10 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         locationListener = new MyLocationListener();
 
         inputValidation = new InputValidation(getContext());
+
+        handler = new Handler();
+
+        permis = new Permission(getActivity(),prefs);
 
     }
 
@@ -242,7 +242,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            requestAllPermissions();
+            permis.requestLocationPermissions();
 
             return;
         }
@@ -314,7 +314,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         public void onStatusChanged(String provider, int status, Bundle extras) {}
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+    /*@TargetApi(Build.VERSION_CODES.M)
     public boolean hasPermission(String permission){
         boolean retorno = true;
 
@@ -359,13 +359,13 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         Boolean comPermis = true;
         Boolean firstRun = false;
 
-        if (prefs.getBoolean("firstrun", true)) {
+        if (prefs.getBoolean("firstrunLocation", true)) {
             // Do first run stuff here then set 'firstrun' as false
             // using the following line to edit/commit prefs
             firstRun = true;
-            if (hasAllPermissions()){
-                prefs.edit().putBoolean("firstrun", false).commit();
-            }
+
+            prefs.edit().putBoolean("firstrunLocation", false).commit();
+
         }
 
         if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) && !hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) && !firstRun) {
@@ -383,7 +383,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
             return;
         }
-    }
+    }*/
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

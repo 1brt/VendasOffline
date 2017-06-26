@@ -1,12 +1,7 @@
 package br.com.vendasoffline.vendasoffline.activities;
 
-import android.Manifest;
-import android.accessibilityservice.GestureDescription;
 import android.annotation.TargetApi;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,19 +12,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Vibrator;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -40,20 +24,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Set;
-
 import br.com.vendasoffline.vendasoffline.R;
-import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroCliente;
+import br.com.vendasoffline.vendasoffline.classes.GetJson;
+import br.com.vendasoffline.vendasoffline.classes.Permission;
 import br.com.vendasoffline.vendasoffline.helpers.Utils;
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.User;
@@ -65,18 +42,13 @@ public class MainActivity extends AppCompatActivity
     private static final int MY_PERMISSIONS_REQUEST_ACTION_IMAGE_CAPTURE = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACTION_PICK = 2;
     private static final int MY_PERMISSIONS_REQUEST = 1;
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
-    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 3;
     private static final String diretorio = Environment.getExternalStorageDirectory()+"/Prodest/Imagens/";
 
     private User usuario;
     private ImageView imgvUsuario;
-    private TextView txtNomeUsuario;
-    private TextView txtNomeEmail;
     private DatabaseHelper databaseHelper;
-    private File folder;
-    private SharedPreferences prefs;
     private ProgressDialog load;
+    private Permission permis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,18 +57,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-                Fragment fragment = new FragmentCadastroCliente();
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.drawer_layout, fragment, fragment.getClass().getSimpleName()).addToBackStack("cadastroCliente").commit();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -107,7 +67,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        prefs = getSharedPreferences("br.com.vendasoffline.vendasoffline", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("br.com.vendasoffline.vendasoffline", MODE_PRIVATE);
+
+        permis = new Permission(MainActivity.this, prefs);
 
         databaseHelper = new DatabaseHelper(MainActivity.this);
 
@@ -118,27 +80,11 @@ public class MainActivity extends AppCompatActivity
             usuario = databaseHelper.getUser(user);
         }
 
-        /*Button btn = (Button) findViewById(R.id.button);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent camera= new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                Uri uriSavedImage=Uri.fromFile(new File(String.format(Locale.ENGLISH,"%s%s%s",diretorio,usuario,".png")));
-                camera.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
-                startActivityForResult(camera, 0);
-                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePicture, 0);
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto , 1);
-            }
-        });*/
-
         View hView =  navigationView.getHeaderView(0);
         imgvUsuario = (ImageView) hView.findViewById(R.id.imgvFotoUsuario);
-        txtNomeUsuario = (TextView) hView.findViewById(R.id.txtNomeUsuario);
-        txtNomeEmail = (TextView) hView.findViewById(R.id.txtNomeEmail);
+
+        TextView txtNomeUsuario = (TextView) hView.findViewById(R.id.txtNomeUsuario);
+        TextView txtNomeEmail = (TextView) hView.findViewById(R.id.txtNomeEmail);
 
         if (usuario != null){
             txtNomeUsuario.setText(usuario.getNome());
@@ -147,13 +93,6 @@ public class MainActivity extends AppCompatActivity
 
         carregaImagemUsuario();
         registerForContextMenu(imgvUsuario);
-
-        /*imgvUsuario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "foiiiiiiiii", Toast.LENGTH_SHORT).show();
-            }
-        });*/
 
     }
 
@@ -164,10 +103,12 @@ public class MainActivity extends AppCompatActivity
 
         if (v.getId()==R.id.imgvFotoUsuario) {
 
-            requestAllPermissions();
+            permis.requestContentPermissions();
+            //requestAllPermissions();
 
-            if (hasAllPermissions()){
-                vibrate();
+            if (permis.hasContentPermissions()){
+            //if (hasAllCameraPermissions()){
+                //vibrate();
                 menu.setHeaderTitle("Selecione uma Opção");
                 String[] menuItems = new String[] {"Câmera","Galeria"};
                 for (int i = 0; i<menuItems.length; i++) {
@@ -263,9 +204,8 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == MY_PERMISSIONS_REQUEST){
 
            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (hasAllPermissions()){
-                    showMessage("Todas as permissões foram concedidas!");
-                    folder = new File(diretorio);
+                if (permis.hasContentPermissions()){
+                    File folder = new File(diretorio);
                     if (!folder.mkdir()){
                         folder.mkdirs();
                     }
@@ -320,7 +260,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_sincronizar) {
             // Faz sincronização com o webservice.
-            (new GetJson()).execute();
+            (new GetJson(MainActivity.this)).execute();
 
         }/* else if (id == R.id.nav_manage) {
 
@@ -335,11 +275,26 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+    /*@TargetApi(Build.VERSION_CODES.M)
     public boolean hasPermission(String permission){
         boolean retorno = true;
 
         if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
+        return retorno;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public boolean hasAllCameraPermissions(){
+        boolean retorno = true;
+
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            retorno = false;
+        }
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             retorno = false;
         }
 
@@ -371,13 +326,13 @@ public class MainActivity extends AppCompatActivity
         Boolean comPermis = true;
         Boolean firstRun = false;
 
-        if (prefs.getBoolean("firstrun", true)) {
+        if (prefs.getBoolean("firstrunContent", true)) {
             // Do first run stuff here then set 'firstrun' as false
             // using the following line to edit/commit prefs
             firstRun = true;
-            if (hasAllPermissions()){
-                prefs.edit().putBoolean("firstrun", false).commit();
-            }
+
+            prefs.edit().putBoolean("firstrunContent", false).commit();
+
         }
 
         if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !firstRun) {
@@ -431,20 +386,21 @@ public class MainActivity extends AppCompatActivity
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
-    }
+    }*/
 
     public void carregaImagemUsuario(){
         File imgFile = new  File(diretorio,usuario.getUsuario() + ".jpg");
-            if(imgFile.exists() && hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+        if(imgFile.exists() && permis.hasExternalPermission()){
 
-                Bitmap photo = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            Bitmap photo = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
-                imgvUsuario.setImageBitmap(photo);
+            imgvUsuario.setImageBitmap(photo);
 
-            }
+        }
+
     }
 
-    private class GetJson extends AsyncTask<Void, Void, Customer> {
+    /*private class GetJson extends AsyncTask<Void, Void, Customer> {
 
         @Override
         protected void onPreExecute(){
@@ -468,5 +424,5 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Customer cliente){
             load.dismiss();
         }
-    }
+    }*/
 }
