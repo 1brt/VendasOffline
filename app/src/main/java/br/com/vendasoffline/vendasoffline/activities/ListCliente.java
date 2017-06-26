@@ -100,11 +100,11 @@ public class ListCliente extends AppCompatActivity{
     }
 
     public void getClientes(){
-        whereClause = "CLA001_NOME LIKE ? OR CLA001_CIDADE LIKE ? OR CLA001_TIPOPESSOA LIKE ? OR CLA001_CNPJ > ?";
+        whereClause = "CLA001_NOME LIKE ? OR CLA001_CIDADE LIKE ? OR CLA001_TIPOPESSOA LIKE ? OR CLA001_CNPJ LIKE ?";
         whereArgs = new String[] {"%"+pesquisar.getText().toString()+"%",
                 "%"+pesquisar.getText().toString()+"%",
                 "%"+pesquisar.getText().toString()+"%",
-                pesquisar.getText().toString()};
+                "%"+pesquisar.getText().toString()+"%"};
         new getClientes().execute();
     }
 }
