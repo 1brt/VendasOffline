@@ -1,17 +1,16 @@
 package br.com.vendasoffline.vendasoffline.helpers;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.XML;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import br.com.vendasoffline.vendasoffline.model.Customer;
-import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 import br.com.vendasoffline.vendasoffline.webService.NetworkUtils;
 
 /**
@@ -34,7 +33,9 @@ public class Utils {
         try {
             Customer cliente = new Customer();
 
-            JSONObject jsonObj = new JSONObject(json);
+            //JSONObject jsonObj = X
+            JSONObject jsonObj = XML.toJSONObject(json);
+            //JSONObject jsonObj = new JSONObject(json);
             JSONArray array = jsonObj.getJSONArray("results");
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
