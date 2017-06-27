@@ -22,22 +22,23 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        if (isOnline(context)){
-            // Do something
+        try {
+            if (isOnline(context)) {
+                // Do something
 
-            Toast.makeText(context, "network available", Toast.LENGTH_SHORT).show();
-            try {
+                Toast.makeText(context, "network available", Toast.LENGTH_SHORT).show();
+
                 /*Customer c = new Customer();
                 c.setNome("d9awud9wa");
                 c.setCnpj("224242");
                 c.setTipoPessoa("Jurídica");
                 new DatabaseHelper(context).addCustomer(c);*/
                 (new GetJson(context)).execute();
-            }catch (Exception e){
-                e.printStackTrace();
             }
-
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     public boolean isOnline(Context context) {

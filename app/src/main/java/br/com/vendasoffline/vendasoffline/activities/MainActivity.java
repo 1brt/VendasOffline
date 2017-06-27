@@ -257,7 +257,8 @@ public class MainActivity extends AppCompatActivity
             Intent intentRegister = new Intent(getApplicationContext(), ListCliente.class);
             startActivity(intentRegister);
         } else if (id == R.id.nav_pedidos) {
-
+            Intent intentRegister = new Intent(getApplicationContext(), ListPedido.class);
+            startActivity(intentRegister);
         } else if (id == R.id.nav_sincronizar) {
             // Faz sincronização com o webservice.
             (new GetJson(MainActivity.this)).execute();
