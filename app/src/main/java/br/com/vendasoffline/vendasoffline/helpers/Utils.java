@@ -1,17 +1,16 @@
 package br.com.vendasoffline.vendasoffline.helpers;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.XML;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import br.com.vendasoffline.vendasoffline.model.Customer;
-import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 import br.com.vendasoffline.vendasoffline.webService.NetworkUtils;
 
 /**
@@ -23,9 +22,11 @@ public class Utils {
         String json;
         Customer retorno;
         json = NetworkUtils.getJSONFromAPI(end);
-        Log.i("Resultado", json);
+
+        //Log.i("Resultado", json);
 
         retorno = parseJson(json);
+        //retorno = parseJson("<Clientes><Cliente><CodPessoa>21312sad</CodPessoa><NomePessoa>TESTE</NomePessoa><Endereco>RUA TRONCA</Endereco><Cidade>CAXIAS DO SUL</Cidade><Cep>95010100</Cep><Uf>RS</Uf><Pais>BR</Pais><Cnpj>01845526058</Cnpj><TipoPessoa>Física</TipoPessoa><Telefone/><Email/><CodTransportadora>940</CodTransportadora><NomeTransportadora>ALFA TRANSPORTES ESPECIAIS LTDA</NomeTransportadora><TipoFrete>97</TipoFrete><DescrTipoFrete>Frete FOB</DescrTipoFrete><CodListaPreco>LSTATUAL</CodListaPreco><DescrListaPreco>LISTA TESTE</DescrListaPreco></Cliente><Cliente><CodPessoa>2102</CodPessoa><NomePessoa>TESTE</NomePessoa><Endereco>RUA TRONCA</Endereco><Cidade>CAXIAS DO SUL</Cidade><Cep>95010100</Cep><Uf>RS</Uf><Pais>BR</Pais><Cnpj>01845526058</Cnpj><TipoPessoa>Física</TipoPessoa><Telefone/><Email/><CodTransportadora>940</CodTransportadora><NomeTransportadora>ALFA TRANSPORTES ESPECIAIS LTDA</NomeTransportadora><TipoFrete>97</TipoFrete><DescrTipoFrete>Frete FOB</DescrTipoFrete><CodListaPreco>LSTATUAL</CodListaPreco><DescrListaPreco>LISTA TESTE</DescrListaPreco></Cliente><Cliente><CodPessoa>2103</CodPessoa><NomePessoa>TESTE</NomePessoa><Endereco>RUA TRONCA</Endereco><Cidade>CAXIAS DO SUL</Cidade><Cep>95010100</Cep><Uf>RS</Uf><Pais>BR</Pais><Cnpj>01845526058</Cnpj><TipoPessoa>Física</TipoPessoa><Telefone/><Email/><CodTransportadora>940</CodTransportadora><NomeTransportadora>ALFA TRANSPORTES ESPECIAIS LTDA</NomeTransportadora><TipoFrete>97</TipoFrete><DescrTipoFrete>Frete FOB</DescrTipoFrete><CodListaPreco>LSTATUAL</CodListaPreco><DescrListaPreco>LISTA TESTE</DescrListaPreco></Cliente></Clientes>");
 
         return retorno;
     }
@@ -34,13 +35,26 @@ public class Utils {
         try {
             Customer cliente = new Customer();
 
-            JSONObject jsonObj = new JSONObject(json);
-            JSONArray array = jsonObj.getJSONArray("results");
+            JSONObject jsonObj = XML.toJSONObject(json);
+            //JSONObject jsonObj = new JSONObject(json);
+            JSONObject userDetails = jsonObj.getJSONObject("Clientes");
+            //JSONObject usera = userDetails.getJSONObject("Cliente");
+            JSONArray array = userDetails.getJSONArray("Cliente");
+            JSONObject usera = array.getJSONObject(0);
+            cliente.setNome(usera.getString("NomePessoa"));
+            cliente.setEndereco(usera.getString("Endereco"));
+            cliente.setCidade(usera.getString("Cidade"));
+            cliente.setCep(usera.getString("Cep"));
+            cliente.setCnpj(usera.getString("Cnpj"));
+            cliente.setPais(usera.getString("Pais"));
+            cliente.setUf(usera.getString("Uf"));
+            cliente.setTipoPessoa(usera.getString("TipoPessoa"));
+            //JSONArray array = jsonObj.getJSONArray("Pedidos");
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date data;
 
-            JSONObject objArray = array.getJSONObject(0);
+            //JSONObject objArray = array.getJSONObject(0);
 
             //JSONObject obj = objArray.getJSONObject("login");
             //Atribui os objetos que estão nas camadas mais altas
@@ -52,16 +66,17 @@ public class Utils {
             //cliente.setNascimento(sdf.format(data));
 
             //Nome da pessoa é um objeto, instancia um novo JSONObject
-            JSONObject nome = objArray.getJSONObject("name");
-            cliente.setNome(nome.getString("first")+" "+nome.getString("last"));
+            //JSONObject nome = usera.getJSONObject("CodPessoa");
+
+            //cliente.setNome(nome.getString("first")+" "+nome.getString("last"));
 
             //Endereco tambem é um Objeto
-            JSONObject endereco = objArray.getJSONObject("location");
-            cliente.setEndereco(endereco.getString("street"));
+            //JSONObject endereco = objArray.getJSONObject("location");
+            /*cliente.setEndereco(endereco.getString("street"));
             cliente.setUf(endereco.getString("state"));
             cliente.setCidade(endereco.getString("city"));
             cliente.setCep(endereco.getString("postcode"));
-            cliente.setCnpj(endereco.getString("postcode"));
+            cliente.setCnpj(endereco.getString("postcode"));*/
             //Imagem eh um objeto
             /*JSONObject foto = obj.getJSONObject("picture");
             cliente.setFoto(baixarImagem(foto.getString("large")));*/

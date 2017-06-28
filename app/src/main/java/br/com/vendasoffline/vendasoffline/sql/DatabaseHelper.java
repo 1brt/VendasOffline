@@ -28,6 +28,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_USER = "CQTBA013";
     // Customer table name
     private static final String TABLE_CUSTOMER = "CLTBA001";
+    // Product table name
+    private static final String TABLE_PRODUCT = "ESTBA001";
 
     // User Table Columns names
     private static final String COLUMN_USER_ID = "CQA013_ID";
@@ -47,6 +49,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CUSTOMER_CEP = "CLA001_CEP";
     private static final String COLUMN_CUSTOMER_NRO = "CLA001_NRO";
     private static final String COLUMN_CUSTOMER_ENDERECO = "CLA001_ENDERECO";
+    private static final String COLUMN_CUSTOMER_SINC = "CLA001_SINCRONIZADO";
+
+    // Product Table Columns names
+    private static final String COLUMN_PRODUCT_ID = "ESA001_ID";
+    private static final String COLUMN_PRODUCT_CODIGO = "ESA001_CODIGO";
+    private static final String COLUMN_PRODUCT_DESCRICAO = "ESA001_DESCRICAO";
+    /*private static final String COLUMN_PRODUCT_CNPJ = "CLA001_CNPJ";
+    private static final String COLUMN_PRODUCT_PAIS = "CLA001_PAIS";
+    private static final String COLUMN_PRODUCT_UF = "CLA001_UF";
+    private static final String COLUMN_PRODUCT_CIDADE = "CLA001_CIDADE";
+    private static final String COLUMN_PRODUCT_CEP = "CLA001_CEP";
+    private static final String COLUMN_PRODUCT_NRO = "CLA001_NRO";
+    private static final String COLUMN_PRODUCT_ENDERECO = "CLA001_ENDERECO";*/
 
     // create User table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -64,7 +79,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_CUSTOMER_CIDADE + " TEXT," +
             COLUMN_CUSTOMER_CEP + " TEXT," +
             COLUMN_CUSTOMER_NRO + " INTEGER," +
-            COLUMN_CUSTOMER_ENDERECO + " TEXT)";
+            COLUMN_CUSTOMER_ENDERECO + " TEXT" +
+            COLUMN_CUSTOMER_SINC + " INTEGER DEFAULT 0)";
+
+    private String CREATE_PRODUCT_TABLE = "CREATE TABLE "+TABLE_PRODUCT+" (" +
+            COLUMN_CUSTOMER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COLUMN_PRODUCT_CODIGO + " INTEGER NOT NULL," +
+            COLUMN_PRODUCT_DESCRICAO + " TEXT NOT NULL)";
 
     // drop User table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
