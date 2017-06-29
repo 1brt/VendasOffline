@@ -33,7 +33,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <Spinner
-            android:id="@+id/spnCliente"
+            android:id="@+id/spnClientes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -106,7 +106,7 @@
         android:paddingRight="@dimen/padding_rigth_cadastro_cliente">
 
         <Button
-            android:id="@+id/btnCadastrar"
+            android:id="@+id/btnSalvarPedido"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

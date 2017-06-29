@@ -51,40 +51,24 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class FragmentCadastroPedido extends Fragment implements View.OnClickListener {
-    private final static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private View view;
-    private TextInputLayout textInputLytNome;
-    private TextInputLayout textInputLytCnpj;
-    /*private TextInputLayout textInputLytCidade;
-    private TextInputLayout textInputLytCep;
-    private TextInputLayout textInputLytNro;
-    private TextInputLayout textInputLytEndereco;*/
-
-    private TextInputEditText textInputEdtxtNome;
-    private TextInputEditText textInputEdtxtCnpj;
-    private TextInputEditText textInputEdtxtCidade;
-    private TextInputEditText textInputEdtxtCep;
-    private TextInputEditText textInputEdtxtNro;
-    private TextInputEditText textInputEdtxtEndereco;
-    private RadioGroup rdgTipoPessoa;
-    private Spinner spnPais;
-    private Spinner spnUf;
-    private Button btnCadastrar;
+    private DatabaseHelper databaseHelper;
+    private TextInputLayout   textInputLytNroPedido;
+    private TextInputLayout   textInputLytQtdeProduto;
+    private TextInputLayout   textInputLytPrecoProduto;
+    private TextInputEditText textInputEdtxtNroPedido;
+    private TextInputEditText textInputEdtxtQtdeProduto;
+    private TextInputEditText textInputEdtxtPrecoProduto;
+    private Spinner spnClientes;
+    private Spinner spnProdutos;
+    private Button btnAdicionar;
+    private Button btnSalvarPedido;
     private Button btnCancelar;
-    private ImageButton btnGPS;
 
     private Customer cliente;
-    private DatabaseHelper databaseHelper;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    private List<String> lstPaises;
-    private List<String> lstUfs;
-    private List<String> lstUfsAbrev;
-    private SharedPreferences prefs;
+    private List<String> lstClientes;
+    private List<String> lstProdutos;
     private InputValidation inputValidation;
-    private ProgressDialog load;
-    private Permission permis;
-    private Handler handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,28 +84,26 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
     private void initViews() {
 
-        textInputLytNome = (TextInputLayout) view.findViewById(R.id.textInputLytNome);
-        textInputLytCnpj = (TextInputLayout) view.findViewById(R.id.textInputLytCnpj);
-        textInputEdtxtNome = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNome);
-        textInputEdtxtNome.requestFocus();
-        textInputEdtxtCnpj = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCnpj);
-        textInputEdtxtCidade = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCidade);
-        textInputEdtxtCep = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCep);
-        textInputEdtxtNro = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNro);
-        textInputEdtxtEndereco = (TextInputEditText) view.findViewById(R.id.textInputEdtxtEndereco);
-        rdgTipoPessoa = (RadioGroup) view.findViewById(R.id.rdgTipoPessoa);
-        spnPais = (Spinner) view.findViewById(R.id.spnPais);
-        spnUf = (Spinner) view.findViewById(R.id.spnUF);
-        btnCadastrar = (Button) view.findViewById(R.id.btnCadastrar);
+        textInputLytNroPedido = (TextInputLayout) view.findViewById(R.id.textInputLytNroPedido);
+        textInputLytQtdeProduto = (TextInputLayout) view.findViewById(R.id.textInputLytQtdeProduto);
+        textInputLytPrecoProduto = (TextInputLayout) view.findViewById(R.id.textInputLytPrecoProduto);
+
+        textInputEdtxtNroPedido = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNroPedido);
+        textInputEdtxtQtdeProduto = (TextInputEditText) view.findViewById(R.id.textInputEdtxtQtdeProduto);
+        textInputEdtxtPrecoProduto = (TextInputEditText) view.findViewById(R.id.textInputEdtxtPrecoProduto);
+
+        spnClientes = (Spinner) view.findViewById(R.id.spnClientes);
+        spnProdutos = (Spinner) view.findViewById(R.id.spnProdutos);
+        btnSalvarPedido = (Button) view.findViewById(R.id.btnSalvarPedido);
+        btnAdicionar = (Button) view.findViewById(R.id.btnAdicionar);
         btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
-        btnGPS = (ImageButton) view.findViewById(R.id.btnGPS);
 
     }
 
     private void initListeners() {
-        btnCadastrar.setOnClickListener(this);
+        btnAdicionar.setOnClickListener(this);
+        btnSalvarPedido.setOnClickListener(this);
         btnCancelar.setOnClickListener(this);
-        btnGPS.setOnClickListener(this);
     }
 
     /**
@@ -131,25 +113,15 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         databaseHelper = new DatabaseHelper(getActivity());
         cliente = new Customer();
 
-        locationManager = (LocationManager)
-                getContext().getSystemService(Context.LOCATION_SERVICE);
-
         // O getResources().getStringArray(R.array.array_paises) retorna um String[].
+        /*
         lstPaises = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_paises)));
 
         lstUfs = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_uf)));
 
         lstUfsAbrev = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_uf_abrev)));
-
-        prefs = getContext().getSharedPreferences("br.com.vendasoffline.vendasoffline", MODE_PRIVATE);
-
-        locationListener = new MyLocationListener();
-
+        */
         inputValidation = new InputValidation(getContext());
-
-        handler = new Handler();
-
-        permis = new Permission(getActivity(),prefs);
 
     }
 
@@ -168,9 +140,6 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
                 FragmentManager fm = getFragmentManager();
                 fm.popBackStackImmediate();
                 break;
-            case R.id.btnGPS:
-                getLocation();
-                break;
         }
     }
 
@@ -181,6 +150,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     }
 
     private void insereCliente() {
+        /*
         String tipo = "";
         if (!inputValidation.isInputEditTextFilled(textInputEdtxtNome, textInputLytNome, getString(R.string.error_message_name))) {
             textInputEdtxtNome.requestFocus();
@@ -213,123 +183,18 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         // Snack Bar to show success message that record saved successfully
         Snackbar.make(view, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
         emptyInputEditText();
-
+        */
     }
 
     private void emptyInputEditText() {
-        textInputEdtxtNome.setText(null);
-        textInputEdtxtCnpj.setText(null);
-        textInputEdtxtCidade.setText(null);
-        textInputEdtxtCep.setText(null);
-        textInputEdtxtNro.setText(null);
-        textInputEdtxtEndereco.setText(null);
-        rdgTipoPessoa.check(R.id.rdbFisica);
+        textInputEdtxtNroPedido.setText(null);
+        textInputEdtxtPrecoProduto.setText(null);
+        textInputEdtxtQtdeProduto.setText(null);
+        /*
         spnPais.setSelection(0);
         spnUf.setSelection(0);
         textInputEdtxtNome.requestFocus();
+        */
     }
 
-    private void getLocation() {
-
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            permis.requestLocationPermissions();
-
-            return;
-        }
-
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            buildAlertMessageNoGps();
-
-            return;
-        }
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                load = ProgressDialog.show(getContext(), "Por favor Aguarde ...", "Recuperando Informações do GPS...");
-            }
-        });
-
-        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener,null);
-    }
-
-    private class MyLocationListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location loc) {
-
-        //------- To get city name from coordinates --------
-            String cityName="";
-            String postalCode="";
-            String pais="";
-            String uf="";
-            String endereco="";
-
-            Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
-            List<Address> addresses;
-            try {
-                addresses = gcd.getFromLocation(loc.getLatitude(),
-                        loc.getLongitude(), 1);
-                if (addresses.size() > 0) {
-                    pais = addresses.get(0).getCountryName();
-                    uf = addresses.get(0).getAdminArea();
-                    cityName = addresses.get(0).getLocality();
-                    postalCode = addresses.get(0).getPostalCode();
-                    endereco = addresses.get(0).getAddressLine(0).toString();
-                    if (endereco.contains(",")){
-                        endereco = endereco.substring(0,endereco.indexOf(","));
-                    }
-                }
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            spnPais.setSelection(lstPaises.indexOf(pais));
-            spnUf.setSelection(lstUfs.indexOf(uf));
-            textInputEdtxtCidade.setText(cityName);
-            textInputEdtxtEndereco.setText(endereco);
-            textInputEdtxtCep.setText(postalCode);
-
-            load.dismiss();
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {}
-
-        @Override
-        public void onProviderEnabled(String provider) {}
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-    }
-
-    private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("O GPS do dispositivo parece estar desabilitado, deseja abilita-lo?")
-                .setCancelable(false)
-                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    private void removeUpdates(){
-        locationManager.removeUpdates(locationListener);
-    }
 }
