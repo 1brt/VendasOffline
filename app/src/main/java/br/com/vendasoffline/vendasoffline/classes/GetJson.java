@@ -49,7 +49,7 @@ public class GetJson extends AsyncTask<Void, Void, Customer> {
         if (new NetworkChangeReceiver().isOnline(context)){
             Utils util = new Utils();
             //c = util.getInformacao("https://randomuser.me/api/");
-            c = util.getInformacao("http://web.effectiveerp.com.br:88/teste/ECommerce/ErpRestService.svc/ListarClientes/2");
+            c = util.getInformacao("http://web.effectiveerp.com.br:88/teste/ECommerce/ErpRestService.svc/AndroidListarClientes/2");
 
             (new DatabaseHelper(context)).addCustomer(c);
         }

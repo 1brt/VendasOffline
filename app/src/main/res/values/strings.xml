@@ -22,6 +22,9 @@
     <string name="hint_endereco">Endereço</string>
     <string name="hint_cep">Cep</string>
     <string name="hint_nro">Nro.</string>
+    <string name="hint_nropedido">Número do Pedido</string>
+    <string name="hint_qtde">Quantidade do Produto</string>
+    <string name="hint_preco">Preço do Produto</string>
     <string name="hint_usuario">Usuário</string>
     <string name="hint_password">Senha</string>
     <string name="hint_confirm_password">Confirme a senha</string>
@@ -31,6 +34,8 @@
     <string name="text_login">Login</string>
     <string name="text_register">Registrar</string>
     <string name="btn_cadastro">Cadastrar</string>
+    <string name="btn_adicionar">Adicionar Produto</string>
+    <string name="btn_salvar_pedido">Salvar Pedido</string>
     <string name="btn_cancela">Cancelar</string>
     <string name="error_message_name">Digite seu Nome Completo</string>
     <string name="error_message_user">Digite um Usuário Válido</string>
@@ -59,6 +64,7 @@
     <string name="navigation_drawer_sincronizar">Sincronizar</string>
 
     <string name="prompt_paises">País</string>
+    <string name="prompt_clientes">Clientes</string>
     <string name="prompt_uf">País</string>
 
     <string-array name="array_paises">
