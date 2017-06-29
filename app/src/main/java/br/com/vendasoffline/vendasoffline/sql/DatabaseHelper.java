@@ -348,7 +348,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_CUSTOMER_TIPOPESSOA,
                 COLUMN_CUSTOMER_CNPJ,
                 COLUMN_CUSTOMER_CIDADE,
+                COLUMN_CUSTOMER_PAIS,
                 COLUMN_CUSTOMER_UF,
+                COLUMN_CUSTOMER_CEP,
+                COLUMN_CUSTOMER_ENDERECO,
+                COLUMN_CUSTOMER_NRO,
+                COLUMN_CUSTOMER_SINC,
         };
 
         // sorting orders

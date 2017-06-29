@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -217,9 +218,29 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     private void setSpinner(){
         try {
 
+            Cursor cur = databaseHelper.getClientes(null, null);
+
             ArrayList<Customer> contacts = new ArrayList<>();
 
-            Customer ac = new Customer();
+            for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+                Customer cliente = new Customer();
+
+                cliente.setNome(cur.getString(cur.getColumnIndex("CLA001_NOME")));
+                cliente.setTipoPessoa(cur.getString(cur.getColumnIndex("CLA001_TIPOPESSOA")));
+                cliente.setCnpj(cur.getString(cur.getColumnIndex("CLA001_CNPJ")));
+                cliente.setPais(cur.getString(cur.getColumnIndex("CLA001_PAIS")));
+                cliente.setUf(cur.getString(cur.getColumnIndex("CLA001_UF")));
+                cliente.setCidade(cur.getString(cur.getColumnIndex("CLA001_CIDADE")));
+                cliente.setCep(cur.getString(cur.getColumnIndex("CLA001_CEP")));
+                cliente.setEndereco(cur.getString(cur.getColumnIndex("CLA001_ENDERECO")));
+                cliente.setNro(cur.getInt(cur.getColumnIndex("CLA001_NRO")));
+                cliente.setSinc(cur.getInt(cur.getColumnIndex("CLA001_SINCRONIZADO")));
+
+                contacts.add(cliente);
+            }
+
+
+/*            Customer ac = new Customer();
 
             ac.setCep("9332423");
             ac.setCnpj("24234");
@@ -245,7 +266,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             ac.setCidade("wokopwkfes");
             ac.setSinc(0);
 
-            contacts.add(ac);
+            contacts.add(ac);*/
 
             ArrayAdapter<Customer> adapter =
                     new ArrayAdapter<Customer>(getContext(), R.layout.support_simple_spinner_dropdown_item, contacts);
