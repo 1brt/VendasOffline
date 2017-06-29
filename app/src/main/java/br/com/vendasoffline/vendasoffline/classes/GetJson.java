@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
+
 import br.com.vendasoffline.vendasoffline.activities.MainActivity;
 import br.com.vendasoffline.vendasoffline.helpers.NetworkChangeReceiver;
 import br.com.vendasoffline.vendasoffline.helpers.Utils;
@@ -15,7 +17,7 @@ import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
  * Created by home on 26/06/17.
  */
 
-public class GetJson extends AsyncTask<Void, Void, Customer> {
+public class GetJson extends AsyncTask<Void, Void, String> {
 
     private Activity activity;
     private Context context;
@@ -37,8 +39,8 @@ public class GetJson extends AsyncTask<Void, Void, Customer> {
     }
 
     @Override
-    protected Customer doInBackground(Void... params) {
-        Customer c=null;
+    protected String doInBackground(Void... params) {
+        ArrayList<Customer> customerList = null;
 
         // Feito isso pois quando é executado pelo broadcast receiver, vem o contexto e não a atividade.
         // E quando é executado direto pelo programa, vem a atividade, para que a animação do load, apareça na tela.
@@ -49,16 +51,16 @@ public class GetJson extends AsyncTask<Void, Void, Customer> {
         if (new NetworkChangeReceiver().isOnline(context)){
             Utils util = new Utils();
             //c = util.getInformacao("https://randomuser.me/api/");
-            c = util.getInformacao("http://web.effectiveerp.com.br:88/teste/ECommerce/ErpRestService.svc/AndroidListarProdutos/2");
+            customerList = util.getInformacao("http://web.effectiveerp.com.br:88/teste/ECommerce/ErpRestService.svc/AndroidListarClientes/2");
 
-            (new DatabaseHelper(context)).addCustomer(c);
+            (new DatabaseHelper(context)).addCustomer(customerList);
         }
 
-        return c;
+        return "Sincronização Concluída!";
     }
 
     @Override
-    protected void onPostExecute(Customer cliente){
+    protected void onPostExecute(String s){
         if (activity != null){
             load.dismiss();
         }

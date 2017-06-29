@@ -445,6 +445,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addCustomer(ArrayList<Customer> cliente){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        for (Customer cli : cliente){
+
+            values.put(COLUMN_CUSTOMER_NOME, cli.getNome());
+            values.put(COLUMN_CUSTOMER_TIPOPESSOA,cli.getTipoPessoa());
+            values.put(COLUMN_CUSTOMER_CNPJ, cli.getCnpj());
+            values.put(COLUMN_CUSTOMER_PAIS, cli.getPais());
+            values.put(COLUMN_CUSTOMER_UF, cli.getUf());
+            values.put(COLUMN_CUSTOMER_CIDADE, cli.getCidade());
+            values.put(COLUMN_CUSTOMER_CEP, cli.getCep());
+            values.put(COLUMN_CUSTOMER_NRO, cli.getNro());
+            values.put(COLUMN_CUSTOMER_ENDERECO, cli.getEndereco());
+
+            // Inserting Row
+            db.insert(TABLE_CUSTOMER, null, values);
+
+            values.clear();
+        }
+
+        db.close();
+    }
+
     public void addProduct(Produto produto){
         SQLiteDatabase db = this.getWritableDatabase();
 
