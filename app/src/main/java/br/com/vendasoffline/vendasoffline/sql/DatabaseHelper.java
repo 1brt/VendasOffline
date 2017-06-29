@@ -94,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_CUSTOMER_CIDADE + " TEXT," +
             COLUMN_CUSTOMER_CEP + " TEXT," +
             COLUMN_CUSTOMER_NRO + " INTEGER," +
-            COLUMN_CUSTOMER_ENDERECO + " TEXT" +
+            COLUMN_CUSTOMER_ENDERECO + " TEXT," +
             COLUMN_CUSTOMER_SINC + " INTEGER DEFAULT 0)";
 
     private String CREATE_PRODUCT_TABLE = "CREATE TABLE "+TABLE_PRODUCT+" (" +
@@ -354,7 +354,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // sorting orders
         String sortOrder =
                 COLUMN_CUSTOMER_NOME + " ASC";
-        List<User> userList = new ArrayList<User>();
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -375,6 +374,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return cursor;
     }
+
+    /*public Customer getCliente(String whereClause,String[] whereArgs) {
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_CUSTOMER_ID+" as _id",
+                COLUMN_CUSTOMER_NOME,
+                COLUMN_CUSTOMER_TIPOPESSOA,
+                COLUMN_CUSTOMER_CNPJ,
+                COLUMN_CUSTOMER_CIDADE,
+                COLUMN_CUSTOMER_PAIS,
+                COLUMN_CUSTOMER_UF,
+                COLUMN_CUSTOMER_CEP,
+                COLUMN_CUSTOMER_ENDERECO,
+                COLUMN_CUSTOMER_NRO,
+                COLUMN_CUSTOMER_SINC
+        };
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // query the user table
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
+         *
+
+        Cursor cursor = db.query(TABLE_CUSTOMER, //Table to query
+                columns,     //columns to return
+                whereClause, //columns for the WHERE clause
+                whereArgs,   //The values for the WHERE clause
+                null,       //group the rows
+                null,       //filter by row groups
+                null); //The sort order
+
+        Customer cliente = new Customer();
+
+        //cliente.setId(cursor.getInt(cursor.getColumnIndex("_id")));
+
+        cliente.setNome(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CUSTOMER_NOME)));
+        cliente.setTipoPessoa(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_TIPOPESSOA)));
+        cliente.setCnpj(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_CNPJ)));
+        cliente.setCidade(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_CIDADE)));
+        cliente.setPais(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_PAIS)));
+        cliente.setUf(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_UF)));
+        cliente.setCep(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_CEP)));
+        cliente.setEndereco(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_ENDERECO)));
+        cliente.setNro(cursor.getInt(cursor.getColumnIndex(COLUMN_CUSTOMER_NRO)));
+        cliente.setSinc(cursor.getInt(cursor.getColumnIndex(COLUMN_CUSTOMER_SINC)));
+
+        return cliente;
+    }*/
 
     public void addCustomer(Customer cliente){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -407,7 +457,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addPedido(Pedido pedido){
+    public long addPedido(Pedido pedido){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -416,21 +466,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PEDIDO_VALORTOTAL,pedido.getValorTotal());
 
         // Inserting Row
-        db.insert(TABLE_PEDIDO, null, values);
+        long id = db.insert(TABLE_PEDIDO, null, values);
+
         db.close();
+
+        return id;
     }
 
-    public void addPedidoItem(PedidoItem pedidoItem){
+    public Cursor getPedidos(String whereClause,String[] whereArgs) {
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_PEDIDO_ID+" as _id",
+                COLUMN_PEDIDO_PEDIDO,
+                COLUMN_PEDIDO_IDCLIENTE,
+                COLUMN_PEDIDO_VALORTOTAL,
+        };
+
+        // sorting orders
+        String sortOrder =
+                COLUMN_PEDIDO_PEDIDO + " ASC";
+        List<User> userList = new ArrayList<User>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // query the user table
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
+         */
+
+        Cursor cursor = db.query(TABLE_CUSTOMER, //Table to query
+                columns,     //columns to return
+                whereClause, //columns for the WHERE clause
+                whereArgs,   //The values for the WHERE clause
+                null,       //group the rows
+                null,       //filter by row groups
+                sortOrder); //The sort order
+
+        return cursor;
+    }
+
+    public void addPedidoItem(ArrayList<PedidoItem> pedidoItem){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_PEDIDO_ITEM_PEDIDO, pedidoItem.getIdPedido());
-        values.put(COLUMN_PEDIDO_ITEM_PRODUTO,pedidoItem.getIdProduto());
-        values.put(COLUMN_PEDIDO_ITEM_QTDE,pedidoItem.getQtde());
-        values.put(COLUMN_PEDIDO_ITEM_PRECO,pedidoItem.getPreco());
 
-        // Inserting Row
-        db.insert(TABLE_PEDIDO_ITEM, null, values);
+        for (PedidoItem ped : pedidoItem){
+            values.put(COLUMN_PEDIDO_ITEM_PEDIDO, ped.getIdPedido());
+            values.put(COLUMN_PEDIDO_ITEM_PRODUTO,ped.getIdProduto());
+            values.put(COLUMN_PEDIDO_ITEM_QTDE,ped.getQtde());
+            values.put(COLUMN_PEDIDO_ITEM_PRECO,ped.getPreco());
+
+            // Inserting Row
+            db.insert(TABLE_PEDIDO_ITEM, null, values);
+        }
+
         db.close();
     }
 

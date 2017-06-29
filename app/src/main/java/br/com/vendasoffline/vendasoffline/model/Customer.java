@@ -15,6 +15,7 @@ public class Customer {
     private String endereco;
     private String cep;
     private int nro;
+    private int sinc;
 
     public int getId(){return id;}
 
@@ -55,4 +56,13 @@ public class Customer {
     public String getEndereco(){return endereco;}
 
     public void setEndereco(String endereco){this.endereco = endereco;}
+
+    public int getSinc(){return sinc;}
+
+    public void setSinc(int sinc){this.sinc = sinc;}
+
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

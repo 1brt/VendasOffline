@@ -5,15 +5,17 @@
     android:layout_height="match_parent"
     android:paddingTop="@dimen/padding_top_cadastro_cliente"
     android:background="@color/colorBackground"
-    android:weightSum="10"
+    android:weightSum="6"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="6"
+        android:weightSum="9"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/padding_left_cadastro_cliente"
+        android:paddingRight="@dimen/padding_rigth_cadastro_cliente">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLytNroPedido"
@@ -83,22 +85,56 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnAdicionar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorTextHint"
-            android:text="@string/btn_adicionar" />
+            android:orientation="horizontal"
+            android:weightSum="7">
+
+            <ImageButton
+                android:id="@+id/btnAdicionar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:backgroundTint="@color/colorBackground"
+                app:srcCompat="@drawable/ic_add" />
+
+            <TextView
+                android:id="@+id/txtLocalizacao"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/text_add_item"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
 
     </LinearLayout>
-
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="9"
+        android:layout_weight="5"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/padding_bottom_cadastro_cliente"
@@ -108,7 +144,7 @@
         <Button
             android:id="@+id/btnSalvarPedido"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="@color/colorTextHint"
             android:text="@string/btn_salvar_pedido" />
@@ -116,7 +152,7 @@
         <Button
             android:id="@+id/btnCancelar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="@color/colorTextHint"
             android:text="@string/btn_cancela" />

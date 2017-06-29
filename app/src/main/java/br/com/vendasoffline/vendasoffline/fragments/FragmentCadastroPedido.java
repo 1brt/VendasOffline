@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
@@ -42,6 +43,7 @@ import br.com.vendasoffline.vendasoffline.activities.ListPedido;
 import br.com.vendasoffline.vendasoffline.classes.Permission;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import br.com.vendasoffline.vendasoffline.model.Customer;
+import br.com.vendasoffline.vendasoffline.model.Pedido;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -61,11 +63,11 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     private TextInputEditText textInputEdtxtPrecoProduto;
     private Spinner spnClientes;
     private Spinner spnProdutos;
-    private Button btnAdicionar;
+    private ImageButton btnAdicionar;
     private Button btnSalvarPedido;
     private Button btnCancelar;
 
-    private Customer cliente;
+    private Pedido pedido;
     private List<String> lstClientes;
     private List<String> lstProdutos;
     private InputValidation inputValidation;
@@ -95,7 +97,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         spnClientes = (Spinner) view.findViewById(R.id.spnClientes);
         spnProdutos = (Spinner) view.findViewById(R.id.spnProdutos);
         btnSalvarPedido = (Button) view.findViewById(R.id.btnSalvarPedido);
-        btnAdicionar = (Button) view.findViewById(R.id.btnAdicionar);
+        btnAdicionar = (ImageButton) view.findViewById(R.id.btnAdicionar);
         btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
 
     }
@@ -111,8 +113,12 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
      */
     private void initObjects() {
         databaseHelper = new DatabaseHelper(getActivity());
-        cliente = new Customer();
 
+        pedido = new Pedido();
+
+        setSpinner();
+
+        //lstClientes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.teste)));
         // O getResources().getStringArray(R.array.array_paises) retorna um String[].
         /*
         lstPaises = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_paises)));
@@ -133,12 +139,14 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnCadastrar:
-                insereCliente();
+            case R.id.btnSalvarPedido:
+                inserePedido();
                 break;
             case R.id.btnCancelar:
                 FragmentManager fm = getFragmentManager();
                 fm.popBackStackImmediate();
+                break;
+            case R.id.btnAdicionar:
                 break;
         }
     }
@@ -149,7 +157,15 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         super.onDestroy();
     }
 
-    private void insereCliente() {
+    private void inserePedido() {
+
+        pedido.setIdCliente(1);
+        pedido.setPedido(Integer.parseInt(textInputEdtxtNroPedido.getText().toString()));
+        pedido.setValorTotal(Integer.parseInt(textInputEdtxtPrecoProduto.getText().toString()) *
+                Integer.parseInt(textInputEdtxtQtdeProduto.getText().toString()));
+
+        long id = databaseHelper.addPedido(pedido);
+
         /*
         String tipo = "";
         if (!inputValidation.isInputEditTextFilled(textInputEdtxtNome, textInputLytNome, getString(R.string.error_message_name))) {
@@ -196,6 +212,49 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         spnUf.setSelection(0);
         textInputEdtxtNome.requestFocus();
         */
+    }
+
+    private void setSpinner(){
+        try {
+
+            ArrayList<Customer> contacts = new ArrayList<>();
+
+            Customer ac = new Customer();
+
+            ac.setCep("9332423");
+            ac.setCnpj("24234");
+            ac.setUf("RS");
+            ac.setNro(20);
+            ac.setPais("brasil");
+            ac.setTipoPessoa("Fisica");
+            ac.setNome("siooisdjf");
+            ac.setEndereco("wapodopwa");
+            ac.setCidade("wokopwkfes");
+            ac.setSinc(0);
+
+            contacts.add(ac);
+
+            ac.setCep("9332423");
+            ac.setCnpj("24234");
+            ac.setUf("RS");
+            ac.setNro(20);
+            ac.setPais("brasil");
+            ac.setTipoPessoa("Fisica");
+            ac.setNome("siooisdjf");
+            ac.setEndereco("wapodopwa");
+            ac.setCidade("wokopwkfes");
+            ac.setSinc(0);
+
+            contacts.add(ac);
+
+            ArrayAdapter<Customer> adapter =
+                    new ArrayAdapter<Customer>(getContext(), R.layout.support_simple_spinner_dropdown_item, contacts);
+            adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+            spnClientes.setAdapter(adapter);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

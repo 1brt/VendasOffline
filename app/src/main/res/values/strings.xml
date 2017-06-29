@@ -50,7 +50,8 @@
     <string name="error_valid_email_password">Usuário e/ou Senha inválidos</string>
     <string name="action_logout">Logout</string>
     <string name="text_localizacao">Pegar localização atual</string>
-    <string name="title_activity_register">RegisterActivity</string>'
+    <string name="text_add_item">Adicionar novo Item</string>
+    <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="radio_button_fnavigation_drawer_socmedisica">Física</string>
