@@ -190,6 +190,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         textInputEdtxtNroPedido.setText(null);
         textInputEdtxtPrecoProduto.setText(null);
         textInputEdtxtQtdeProduto.setText(null);
+        textInputEdtxtNroPedido.requestFocus();
         /*
         spnPais.setSelection(0);
         spnUf.setSelection(0);
