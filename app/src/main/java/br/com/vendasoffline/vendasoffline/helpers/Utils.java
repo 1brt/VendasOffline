@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import br.com.vendasoffline.vendasoffline.model.Customer;
+import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.webService.NetworkUtils;
 
 /**
@@ -19,7 +20,13 @@ import br.com.vendasoffline.vendasoffline.webService.NetworkUtils;
  */
 public class Utils {
 
-    public ArrayList<Customer> getInformacao(String end){
+    private String tipo;
+
+    public Utils(String tipo){
+        this.tipo = tipo;
+    }
+
+    public <T> ArrayList<T> getInformacao(String end){
         String json;
 
         json = NetworkUtils.getJSONFromAPI(end);
@@ -31,31 +38,55 @@ public class Utils {
         return parseJson(json);
     }
 
-    private ArrayList<Customer> parseJson(String json){
-        ArrayList<Customer> arrayList = new ArrayList<>();
+    private <T> ArrayList<T> parseJson(String json){
+        ArrayList<T> arrayList = new ArrayList<>();
+
+        String userDet="";
+        String userArr="";
 
         try {
 
+            if (tipo.equals("Cliente")){
+                userDet = "AndroidClientes";
+                userArr = "AndroidCliente";
+            }else if (tipo.equals("Produto")){
+                userDet = "AndroidProdutos";
+                userArr = "AndroidProduto";
+            }
+
             JSONObject jsonObj = XML.toJSONObject(json);
             //JSONObject jsonObj = new JSONObject(json);
-            JSONObject userDetails = jsonObj.getJSONObject("AndroidClientes");
+            JSONObject userDetails = jsonObj.getJSONObject(userDet);
             //JSONObject usera = userDetails.getJSONObject("Cliente");
-            JSONArray array = userDetails.getJSONArray("AndroidCliente");
-            JSONObject cli;
-            for (int i=0; i <= array.length() - 1 ; i++){
-                cli = array.getJSONObject(i);
-                Customer cliente = new Customer();
-                cliente.setNome(cli.getString("NomePessoa"));
-                cliente.setTipoPessoa(cli.getString("TipoPessoa"));
-                cliente.setCnpj(cli.getString("Cnpj"));
-                cliente.setPais(cli.getString("Pais"));
-                cliente.setUf(cli.getString("Uf"));
-                cliente.setCidade(cli.getString("Cidade"));
-                cliente.setEndereco(cli.getString("Endereco"));
-                cliente.setCep(cli.getString("Cep"));
-                cliente.setSinc(1);
+            JSONArray array = userDetails.getJSONArray(userArr);
+            JSONObject dado;
 
-                arrayList.add(cliente);
+            for (int i=0; i <= array.length() - 1 ; i++){
+                dado = array.getJSONObject(i);
+
+                if (tipo.equals("Cliente")){
+                    Customer cliente = new Customer();
+                    cliente.setNome(dado.getString("NomePessoa"));
+                    cliente.setTipoPessoa(dado.getString("TipoPessoa"));
+                    cliente.setCnpj(dado.getString("Cnpj"));
+                    cliente.setPais(dado.getString("Pais"));
+                    cliente.setUf(dado.getString("Uf"));
+                    cliente.setCidade(dado.getString("Cidade"));
+                    cliente.setEndereco(dado.getString("Endereco"));
+                    cliente.setCep(dado.getString("Cep"));
+                    cliente.setSinc(1);
+
+                    arrayList.add((T) cliente);
+
+                }else if (tipo.equals("Produto")){
+                    Produto produto = new Produto();
+
+                    produto.setCodigo(dado.getString("CodProduto"));
+                    produto.setDescricao(dado.getString("DescrProduto"));
+
+                    arrayList.add((T) produto);
+
+                }
             }
 
             return arrayList;

@@ -17,13 +17,15 @@ import android.widget.SimpleCursorAdapter;
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroCliente;
 import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroPedido;
+import br.com.vendasoffline.vendasoffline.model.Pedido;
+import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
 public class ListPedido extends AppCompatActivity {
 
-    private ListView clienteListView;
+    private ListView pedidoListView;
     private EditText pesquisar;
-    private CursorAdapter clienteAdapter; // Adaptador para a ListView
+    private CursorAdapter PedidoAdapter; // Adaptador para a ListView
     private String whereClause="";
     private String[] whereArgs;
 
@@ -33,16 +35,16 @@ public class ListPedido extends AppCompatActivity {
         setContentView(R.layout.activity_pedido);
         getSupportActionBar().hide();
 
-        clienteListView = (ListView) findViewById(R.id.listView);
+        pedidoListView = (ListView) findViewById(R.id.listViewPedidos);
         pesquisar = (EditText) findViewById(R.id.edtConsulta);
 
         // mapeia cada coluna da tabela com um componente da tela
-        String[] origem = new String[]{"CLA001_NOME","CLA001_TIPOPESSOA","CLA001_CNPJ","CLA001_CIDADE","CLA001_UF"};
-        int[] destino = new int[] { R.id.txtNome, R.id.txtTipoPessoa, R.id.txtCPF,R.id.txtCidade,R.id.txtUf};
+        String[] origem = new String[]{"PEA001_PEDIDO","PEA001_CLA001_ID","PEA001_VALORTOTAL"};
+        int[] destino = new int[] { R.id.txtNome, R.id.txtTipoPessoa, R.id.txtCPF,};
         int flags = 0;
 
-        clienteAdapter = new SimpleCursorAdapter(ListPedido.this,R.layout.activity_view_pedido,null,origem,destino,flags);
-        clienteListView.setAdapter(clienteAdapter);
+        PedidoAdapter = new SimpleCursorAdapter(ListPedido.this,R.layout.activity_view_pedido,null,origem,destino,flags);
+        pedidoListView.setAdapter(PedidoAdapter);
 
         FloatingActionButton fabPedido = (FloatingActionButton) findViewById(R.id.fabPedido);
         fabPedido.setOnClickListener(new View.OnClickListener() {
@@ -77,13 +79,13 @@ public class ListPedido extends AppCompatActivity {
         DatabaseHelper dbConnection = new DatabaseHelper(ListPedido.this);
         @Override
         protected Cursor doInBackground(Object... params){
-            return dbConnection.getClientes(whereClause,whereArgs); //retorna a Pontuação
+            return dbConnection.getPedidos(whereClause,whereArgs); //retorna a Pontuação
         }
         // usa o cursor retornado pelo doInBackground
         @Override
         protected void onPostExecute(Cursor result){
             try {
-                clienteAdapter.changeCursor(result); //altera o cursor para um novo cursor
+                PedidoAdapter.changeCursor(result); //altera o cursor para um novo cursor
                 dbConnection.close();
             }catch (Exception e){
                 e.printStackTrace();
@@ -92,11 +94,8 @@ public class ListPedido extends AppCompatActivity {
     }
 
     public void getPedidos(){
-        whereClause = "CLA001_NOME LIKE ? OR CLA001_CIDADE LIKE ? OR CLA001_TIPOPESSOA LIKE ? OR CLA001_CNPJ LIKE ?";
-        whereArgs = new String[] {"%"+pesquisar.getText().toString()+"%",
-                "%"+pesquisar.getText().toString()+"%",
-                "%"+pesquisar.getText().toString()+"%",
-                "%"+pesquisar.getText().toString()+"%"};
-        new ListPedido.getPedidos().execute();
+        whereClause = "PEA001_PEDIDO LIKE ?";
+        whereArgs = new String[] {"%"+pesquisar.getText().toString()+"%"};
+        new getPedidos().execute();
     }
 }

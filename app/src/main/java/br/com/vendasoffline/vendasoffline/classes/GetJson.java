@@ -11,6 +11,7 @@ import br.com.vendasoffline.vendasoffline.activities.MainActivity;
 import br.com.vendasoffline.vendasoffline.helpers.NetworkChangeReceiver;
 import br.com.vendasoffline.vendasoffline.helpers.Utils;
 import br.com.vendasoffline.vendasoffline.model.Customer;
+import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
 /**
@@ -41,6 +42,7 @@ public class GetJson extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         ArrayList<Customer> customerList = null;
+        ArrayList<Produto> productList = null;
 
         // Feito isso pois quando é executado pelo broadcast receiver, vem o contexto e não a atividade.
         // E quando é executado direto pelo programa, vem a atividade, para que a animação do load, apareça na tela.
@@ -49,11 +51,14 @@ public class GetJson extends AsyncTask<Void, Void, String> {
         }
 
         if (new NetworkChangeReceiver().isOnline(context)){
-            Utils util = new Utils();
+
             //c = util.getInformacao("https://randomuser.me/api/");
-            customerList = util.getInformacao("http://web.effectiveerp.com.br:88/teste/ECommerce/ErpRestService.svc/AndroidListarClientes/2");
+            customerList = new Utils("Cliente").getInformacao("http://web.effectiveerp.com.br:88/teste/ECommerce/ErpRestService.svc/AndroidListarClientes/2");
 
             (new DatabaseHelper(context)).addCustomer(customerList);
+
+            productList = new Utils("Produto").getInformacao("http://web.effectiveerp.com.br:88/teste/ECommerce/ErpRestService.svc/AndroidListarProdutos/2");
+            (new DatabaseHelper(context)).addProduct(productList);
         }
 
         return "Sincronização Concluída!";

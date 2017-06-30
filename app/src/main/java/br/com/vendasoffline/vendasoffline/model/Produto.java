@@ -21,4 +21,9 @@ public class Produto {
     public String getCodigo(){ return codigo; }
 
     public String getDescricao(){ return descricao; }
+
+    @Override
+    public String toString(){
+        return codigo+"-"+descricao;
+    }
 }

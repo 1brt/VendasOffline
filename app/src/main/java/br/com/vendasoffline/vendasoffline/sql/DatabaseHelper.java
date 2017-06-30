@@ -450,11 +450,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addCustomer(ArrayList<Customer> cliente){
+    public void addCustomer(ArrayList<Customer> clientes){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        for (Customer cli : cliente){
+        for (Customer cli : clientes){
 
             values.put(COLUMN_CUSTOMER_NOME, cli.getNome());
             values.put(COLUMN_CUSTOMER_TIPOPESSOA,cli.getTipoPessoa());
@@ -487,6 +487,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addProduct(ArrayList<Produto> produtos){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        for (Produto prod : produtos){
+
+            values.put(COLUMN_PRODUCT_CODIGO, prod.getCodigo());
+            values.put(COLUMN_PRODUCT_DESCRICAO,prod.getDescricao());
+
+            // Inserting Row
+            db.insert(TABLE_PRODUCT, null, values);
+
+            values.clear();
+        }
+
+        db.close();
+    }
+
+    public Cursor getProdutos(String whereClause,String[] whereArgs) {
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_PRODUCT_ID+" as _id",
+                COLUMN_PRODUCT_CODIGO,
+                COLUMN_PRODUCT_DESCRICAO
+        };
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // query the user table
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
+         **/
+
+         Cursor cursor = db.query(TABLE_PRODUCT, //Table to query
+         columns,     //columns to return
+         whereClause, //columns for the WHERE clause
+         whereArgs,   //The values for the WHERE clause
+         null,       //group the rows
+         null,       //filter by row groups
+         null); //The sort order
+
+         return cursor;
+    }
+    
     public long addPedido(Pedido pedido){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -515,7 +561,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // sorting orders
         String sortOrder =
                 COLUMN_PEDIDO_PEDIDO + " ASC";
-        List<User> userList = new ArrayList<User>();
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -526,7 +571,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
          * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
          */
 
-        Cursor cursor = db.query(TABLE_CUSTOMER, //Table to query
+        Cursor cursor = db.query(TABLE_PEDIDO, //Table to query
                 columns,     //columns to return
                 whereClause, //columns for the WHERE clause
                 whereArgs,   //The values for the WHERE clause

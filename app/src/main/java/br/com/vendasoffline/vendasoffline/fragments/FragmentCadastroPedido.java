@@ -45,6 +45,7 @@ import br.com.vendasoffline.vendasoffline.classes.Permission;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.Pedido;
+import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -225,6 +226,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
                 Customer cliente = new Customer();
 
+                cliente.setId(cur.getInt(cur.getColumnIndex("_id")));
                 cliente.setNome(cur.getString(cur.getColumnIndex("CLA001_NOME")));
                 cliente.setTipoPessoa(cur.getString(cur.getColumnIndex("CLA001_TIPOPESSOA")));
                 cliente.setCnpj(cur.getString(cur.getColumnIndex("CLA001_CNPJ")));
@@ -239,40 +241,33 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
                 contacts.add(cliente);
             }
 
+            ArrayAdapter<Customer> adapterCliente =
+                    new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, contacts);
+            adapterCliente.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 
-/*            Customer ac = new Customer();
+            spnClientes.setAdapter(adapterCliente);
 
-            ac.setCep("9332423");
-            ac.setCnpj("24234");
-            ac.setUf("RS");
-            ac.setNro(20);
-            ac.setPais("brasil");
-            ac.setTipoPessoa("Fisica");
-            ac.setNome("siooisdjf");
-            ac.setEndereco("wapodopwa");
-            ac.setCidade("wokopwkfes");
-            ac.setSinc(0);
+            cur = databaseHelper.getProdutos(null,null);
 
-            contacts.add(ac);
+            ArrayList<Produto> produtos = new ArrayList<>();
 
-            ac.setCep("9332423");
-            ac.setCnpj("24234");
-            ac.setUf("RS");
-            ac.setNro(20);
-            ac.setPais("brasil");
-            ac.setTipoPessoa("Fisica");
-            ac.setNome("siooisdjf");
-            ac.setEndereco("wapodopwa");
-            ac.setCidade("wokopwkfes");
-            ac.setSinc(0);
+            for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+                Produto produto = new Produto();
 
-            contacts.add(ac);*/
+                produto.setId(cur.getInt(cur.getColumnIndex("_id")));
+                produto.setCodigo(cur.getString(cur.getColumnIndex("ESA001_CODIGO")));
+                produto.setDescricao(cur.getString(cur.getColumnIndex("ESA001_DESCRICAO")));
 
-            ArrayAdapter<Customer> adapter =
-                    new ArrayAdapter<Customer>(getContext(), R.layout.support_simple_spinner_dropdown_item, contacts);
-            adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 
-            spnClientes.setAdapter(adapter);
+                produtos.add(produto);
+            }
+
+            ArrayAdapter<Produto> adapterProduto =
+                    new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, produtos);
+            adapterProduto.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+            spnProdutos.setAdapter(adapterProduto);
+
         }catch (Exception e){
             e.printStackTrace();
         }
