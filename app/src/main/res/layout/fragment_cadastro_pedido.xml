@@ -34,7 +34,14 @@
                 android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
-        <Spinner
+        <!--<Spinner
+            android:id="@+id/spnClientes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:entries="@array/array_paises"
+            android:prompt="@string/prompt_clientes" />-->
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spnClientes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -42,7 +49,7 @@
             android:entries="@array/array_paises"
             android:prompt="@string/prompt_clientes" />
 
-        <Spinner
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spnProdutos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
