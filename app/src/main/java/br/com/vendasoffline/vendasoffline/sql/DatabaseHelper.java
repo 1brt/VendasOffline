@@ -600,4 +600,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addPedidoItem(PedidoItem pedidoItem){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_PEDIDO_ITEM_PEDIDO, pedidoItem.getIdPedido());
+        values.put(COLUMN_PEDIDO_ITEM_PRODUTO,pedidoItem.getIdProduto());
+        values.put(COLUMN_PEDIDO_ITEM_QTDE,pedidoItem.getQtde());
+        values.put(COLUMN_PEDIDO_ITEM_PRECO,pedidoItem.getPreco());
+
+        // Inserting Row
+        db.insert(TABLE_PEDIDO_ITEM, null, values);
+
+        db.close();
+    }
+
 }

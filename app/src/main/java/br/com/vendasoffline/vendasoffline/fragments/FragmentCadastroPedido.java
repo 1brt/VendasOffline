@@ -31,6 +31,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ import br.com.vendasoffline.vendasoffline.classes.Permission;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.Pedido;
+import br.com.vendasoffline.vendasoffline.model.PedidoItem;
 import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
@@ -63,13 +67,12 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     private TextInputEditText textInputEdtxtNroPedido;
     private TextInputEditText textInputEdtxtQtdeProduto;
     private TextInputEditText textInputEdtxtPrecoProduto;
-    private Spinner spnClientes;
-    private Spinner spnProdutos;
+    private SearchableSpinner spnClientes;
+    private SearchableSpinner spnProdutos;
     private ImageButton btnAdicionar;
     private Button btnSalvarPedido;
     private Button btnCancelar;
 
-    private Pedido pedido;
     private List<String> lstClientes;
     private List<String> lstProdutos;
     private InputValidation inputValidation;
@@ -96,8 +99,8 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         textInputEdtxtQtdeProduto = (TextInputEditText) view.findViewById(R.id.textInputEdtxtQtdeProduto);
         textInputEdtxtPrecoProduto = (TextInputEditText) view.findViewById(R.id.textInputEdtxtPrecoProduto);
 
-        spnClientes = (Spinner) view.findViewById(R.id.spnClientes);
-        spnProdutos = (Spinner) view.findViewById(R.id.spnProdutos);
+        spnClientes = (SearchableSpinner) view.findViewById(R.id.spnClientes);
+        spnProdutos = (SearchableSpinner) view.findViewById(R.id.spnProdutos);
         btnSalvarPedido = (Button) view.findViewById(R.id.btnSalvarPedido);
         btnAdicionar = (ImageButton) view.findViewById(R.id.btnAdicionar);
         btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
@@ -115,8 +118,6 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
      */
     private void initObjects() {
         databaseHelper = new DatabaseHelper(getActivity());
-
-        pedido = new Pedido();
 
         setSpinner();
 
@@ -161,12 +162,29 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
     private void inserePedido() {
 
-        pedido.setIdCliente(1);
+        Customer cliente = (Customer) spnClientes.getSelectedItem();
+
+        Produto produto = (Produto) spnProdutos.getSelectedItem();
+
+        Pedido pedido = new Pedido();
+
+        pedido.setIdCliente(cliente.getId());
         pedido.setPedido(Integer.parseInt(textInputEdtxtNroPedido.getText().toString()));
         pedido.setValorTotal(Integer.parseInt(textInputEdtxtPrecoProduto.getText().toString()) *
                 Integer.parseInt(textInputEdtxtQtdeProduto.getText().toString()));
 
         long id = databaseHelper.addPedido(pedido);
+
+        PedidoItem pedItem = new PedidoItem();
+
+        pedItem.setIdPedido(id);
+        pedItem.setIdProduto(produto.getId());
+        pedItem.setPreco(Double.parseDouble(textInputEdtxtPrecoProduto.getText().toString()));
+        pedItem.setQtde(Double.parseDouble(textInputEdtxtQtdeProduto.getText().toString()));
+
+        databaseHelper.addPedidoItem(pedItem);
+
+        emptyInputEditText();
 
         /*
         String tipo = "";
@@ -209,11 +227,10 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         textInputEdtxtPrecoProduto.setText(null);
         textInputEdtxtQtdeProduto.setText(null);
         textInputEdtxtNroPedido.requestFocus();
-        /*
-        spnPais.setSelection(0);
-        spnUf.setSelection(0);
-        textInputEdtxtNome.requestFocus();
-        */
+
+        spnClientes.setSelection(0);
+        spnProdutos.setSelection(0);
+        textInputEdtxtNroPedido.requestFocus();
     }
 
     private void setSpinner(){
@@ -247,6 +264,8 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
             spnClientes.setAdapter(adapterCliente);
 
+            spnClientes.setTitle(getResources().getString(R.string.hint_spinner));
+
             cur = databaseHelper.getProdutos(null,null);
 
             ArrayList<Produto> produtos = new ArrayList<>();
@@ -267,6 +286,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             adapterProduto.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 
             spnProdutos.setAdapter(adapterProduto);
+            spnProdutos.setTitle(getResources().getString(R.string.hint_spinner));
 
         }catch (Exception e){
             e.printStackTrace();

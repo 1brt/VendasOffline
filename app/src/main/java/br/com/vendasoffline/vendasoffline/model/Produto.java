@@ -6,7 +6,7 @@ package br.com.vendasoffline.vendasoffline.model;
 
 public class Produto {
 
-    private int id;
+    private long id;
     private String codigo;
     private String descricao;
 
@@ -16,7 +16,7 @@ public class Produto {
 
     public void setDescricao(String descricao){ this.descricao = descricao; }
 
-    public int getId(){ return id; }
+    public long getId(){ return id; }
 
     public String getCodigo(){ return codigo; }
 
