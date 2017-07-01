@@ -73,8 +73,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     private Button btnSalvarPedido;
     private Button btnCancelar;
 
-    private List<String> lstClientes;
-    private List<String> lstProdutos;
+    private ArrayList<PedidoItem> itens;
     private InputValidation inputValidation;
 
     @Override
@@ -118,19 +117,10 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
      */
     private void initObjects() {
         databaseHelper = new DatabaseHelper(getActivity());
+        itens = new ArrayList<>();
+        inputValidation = new InputValidation(getContext());
 
         setSpinner();
-
-        //lstClientes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.teste)));
-        // O getResources().getStringArray(R.array.array_paises) retorna um String[].
-        /*
-        lstPaises = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_paises)));
-
-        lstUfs = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_uf)));
-
-        lstUfsAbrev = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.array_uf_abrev)));
-        */
-        inputValidation = new InputValidation(getContext());
 
     }
 
@@ -150,6 +140,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
                 fm.popBackStackImmediate();
                 break;
             case R.id.btnAdicionar:
+                inserirPedidoItem(true);
                 break;
         }
     }
@@ -162,75 +153,60 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
     private void inserePedido() {
 
-        Customer cliente = (Customer) spnClientes.getSelectedItem();
+        if (!inputValidation.isInputEditTextFilled(textInputEdtxtNroPedido, textInputLytNroPedido, getString(R.string.error_message_name))) {
+            textInputEdtxtNroPedido.requestFocus();
+            return;
+        }
 
-        Produto produto = (Produto) spnProdutos.getSelectedItem();
+        Customer cliente = (Customer) spnClientes.getSelectedItem();
 
         Pedido pedido = new Pedido();
 
         pedido.setIdCliente(cliente.getId());
+        pedido.setNomeCliente(cliente.getNome());
         pedido.setPedido(Integer.parseInt(textInputEdtxtNroPedido.getText().toString()));
-        pedido.setValorTotal(Integer.parseInt(textInputEdtxtPrecoProduto.getText().toString()) *
-                Integer.parseInt(textInputEdtxtQtdeProduto.getText().toString()));
+
+        if (itens.size() > 0){
+            double vlrTotal = 0;
+
+            for (PedidoItem itemPed : itens){
+                vlrTotal += itemPed.getPreco() * itemPed.getQtde();
+            }
+
+            pedido.setValorTotal(vlrTotal);
+        }
 
         long id = databaseHelper.addPedido(pedido);
 
-        PedidoItem pedItem = new PedidoItem();
+        inserirPedidoItem(false);
 
-        pedItem.setIdPedido(id);
-        pedItem.setIdProduto(produto.getId());
-        pedItem.setPreco(Double.parseDouble(textInputEdtxtPrecoProduto.getText().toString()));
-        pedItem.setQtde(Double.parseDouble(textInputEdtxtQtdeProduto.getText().toString()));
+        if (itens.size() > 0){
+            for (PedidoItem itemPed : itens){
+                itemPed.setIdPedido(id);
+            }
 
-        databaseHelper.addPedidoItem(pedItem);
-
-        emptyInputEditText();
-
-        /*
-        String tipo = "";
-        if (!inputValidation.isInputEditTextFilled(textInputEdtxtNome, textInputLytNome, getString(R.string.error_message_name))) {
-            textInputEdtxtNome.requestFocus();
-            return;
-        }else if (!inputValidation.isInputEditTextFilled(textInputEdtxtCnpj, textInputLytCnpj, getString(R.string.error_message_name))) {
-            textInputEdtxtCnpj.requestFocus();
-            return;
+            // Adiciona todos produtos da lista no banco de dados.
+            databaseHelper.addPedidoItem(itens);
         }
-
-        cliente.setNome(textInputEdtxtNome.getText().toString().trim());
-
-        if (rdgTipoPessoa.getCheckedRadioButtonId() == R.id.rdbFisica) {
-            tipo = "Física";
-        } else if (rdgTipoPessoa.getCheckedRadioButtonId() == R.id.rdbJuridica) {
-            tipo = "Jurídica";
-        }
-
-        // TODO: Testar se os campos não não nulos, para não dar pau no toString.
-        cliente.setTipoPessoa(tipo);
-        cliente.setCnpj(textInputEdtxtCnpj.getText().toString().trim());
-        cliente.setPais((String) spnPais.getSelectedItem());
-        cliente.setUf(lstUfsAbrev.get(spnUf.getSelectedItemPosition()));
-        cliente.setCidade(textInputEdtxtCidade.getText().toString().trim());
-        cliente.setCep(textInputEdtxtCep.getText().toString().trim());
-        cliente.setNro(Integer.parseInt(textInputEdtxtNro.getText().toString().trim()));
-        cliente.setEndereco(textInputEdtxtEndereco.getText().toString().trim());
-
-        databaseHelper.addCustomer(cliente);
 
         // Snack Bar to show success message that record saved successfully
         Snackbar.make(view, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-        emptyInputEditText();
-        */
+        emptyInputEditText(true);
+
     }
 
-    private void emptyInputEditText() {
-        textInputEdtxtNroPedido.setText(null);
+    private void emptyInputEditText(boolean todos) {
+
+        spnProdutos.setSelection(0);
         textInputEdtxtPrecoProduto.setText(null);
         textInputEdtxtQtdeProduto.setText(null);
-        textInputEdtxtNroPedido.requestFocus();
 
-        spnClientes.setSelection(0);
-        spnProdutos.setSelection(0);
-        textInputEdtxtNroPedido.requestFocus();
+        if (todos){
+            textInputEdtxtNroPedido.setText(null);
+            spnClientes.setSelection(0);
+            textInputEdtxtNroPedido.requestFocus();
+        }
+
     }
 
     private void setSpinner(){
@@ -265,6 +241,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             spnClientes.setAdapter(adapterCliente);
 
             spnClientes.setTitle(getResources().getString(R.string.hint_spinner));
+            spnClientes.setPositiveButton("Fechar");
 
             cur = databaseHelper.getProdutos(null,null);
 
@@ -287,9 +264,30 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
             spnProdutos.setAdapter(adapterProduto);
             spnProdutos.setTitle(getResources().getString(R.string.hint_spinner));
-
+            spnProdutos.setPositiveButton("Fechar");
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public void inserirPedidoItem(boolean mostraMsg){
+
+        // Só insere o item na lista caso o preço e a quantidade não sejam nulos.
+        if (textInputEdtxtPrecoProduto.length() > 0 && textInputEdtxtQtdeProduto.length() > 0){
+            PedidoItem pedItem = new PedidoItem();
+            Produto produto = (Produto) spnProdutos.getSelectedItem();
+
+            pedItem.setIdProduto(produto.getId());
+            pedItem.setPreco(Double.parseDouble(textInputEdtxtPrecoProduto.getText().toString()));
+            pedItem.setQtde(Double.parseDouble(textInputEdtxtQtdeProduto.getText().toString()));
+
+            itens.add(pedItem);
+
+            if (mostraMsg){
+                Snackbar.make(view, getString(R.string.pedido_item_inserido), Snackbar.LENGTH_LONG).show();
+                emptyInputEditText(false);
+
+            }
         }
     }
 

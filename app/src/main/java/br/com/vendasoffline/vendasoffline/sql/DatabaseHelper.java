@@ -68,6 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Pedido Table Columns names
     private static final String COLUMN_PEDIDO_ID = "PEA001_ID";
     private static final String COLUMN_PEDIDO_IDCLIENTE = "PEA001_CLA001_ID";
+    private static final String COLUMN_PEDIDO_NOMECLIENTE = "PEA001_CLIENTE";
     private static final String COLUMN_PEDIDO_PEDIDO = "PEA001_PEDIDO";
     private static final String COLUMN_PEDIDO_VALORTOTAL = "PEA001_VALORTOTAL";
 
@@ -105,8 +106,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String CREATE_PEDIDO_TABLE = "CREATE TABLE "+TABLE_PEDIDO+" (" +
             COLUMN_PEDIDO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COLUMN_PEDIDO_IDCLIENTE + " INTEGER NOT NULL," +
+            COLUMN_PEDIDO_NOMECLIENTE + " TEXT NOT NULL," +
             COLUMN_PEDIDO_PEDIDO + " INTEGER NOT NULL," +
-            COLUMN_PEDIDO_VALORTOTAL + " INTEGER, FOREIGN KEY (" +
+            COLUMN_PEDIDO_VALORTOTAL + " INTEGER DEFAULT 0, FOREIGN KEY (" +
             COLUMN_PEDIDO_IDCLIENTE +") REFERENCES " +
             TABLE_CUSTOMER +" (" + COLUMN_CUSTOMER_ID + "))";
 
@@ -170,6 +172,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Drop User Table if exist
         db.execSQL(DROP_USER_TABLE);
         db.execSQL(DROP_CUSTOMER_TABLE);
+        db.execSQL(DROP_PRODUCT_TABLE);
+        db.execSQL(DROP_PEDIDO_TABLE);
+        db.execSQL(DROP_PEDIDO_ITEM_TABLE);
 
         // Create tables again
         onCreate(db);
@@ -380,57 +385,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    /*public Customer getCliente(String whereClause,String[] whereArgs) {
-        // array of columns to fetch
-        String[] columns = {
-                COLUMN_CUSTOMER_ID+" as _id",
-                COLUMN_CUSTOMER_NOME,
-                COLUMN_CUSTOMER_TIPOPESSOA,
-                COLUMN_CUSTOMER_CNPJ,
-                COLUMN_CUSTOMER_CIDADE,
-                COLUMN_CUSTOMER_PAIS,
-                COLUMN_CUSTOMER_UF,
-                COLUMN_CUSTOMER_CEP,
-                COLUMN_CUSTOMER_ENDERECO,
-                COLUMN_CUSTOMER_NRO,
-                COLUMN_CUSTOMER_SINC
-        };
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        // query the user table
-        /**
-         * Here query function is used to fetch records from user table this function works like we use sql query.
-         * SQL query equivalent to this query function is
-         * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
-         *
-
-        Cursor cursor = db.query(TABLE_CUSTOMER, //Table to query
-                columns,     //columns to return
-                whereClause, //columns for the WHERE clause
-                whereArgs,   //The values for the WHERE clause
-                null,       //group the rows
-                null,       //filter by row groups
-                null); //The sort order
-
-        Customer cliente = new Customer();
-
-        //cliente.setId(cursor.getInt(cursor.getColumnIndex("_id")));
-
-        cliente.setNome(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CUSTOMER_NOME)));
-        cliente.setTipoPessoa(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_TIPOPESSOA)));
-        cliente.setCnpj(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_CNPJ)));
-        cliente.setCidade(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_CIDADE)));
-        cliente.setPais(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_PAIS)));
-        cliente.setUf(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_UF)));
-        cliente.setCep(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_CEP)));
-        cliente.setEndereco(cursor.getString(cursor.getColumnIndex(COLUMN_CUSTOMER_ENDERECO)));
-        cliente.setNro(cursor.getInt(cursor.getColumnIndex(COLUMN_CUSTOMER_NRO)));
-        cliente.setSinc(cursor.getInt(cursor.getColumnIndex(COLUMN_CUSTOMER_SINC)));
-
-        return cliente;
-    }*/
-
     public void addCustomer(Customer cliente){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -539,6 +493,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_PEDIDO_PEDIDO, pedido.getPedido());
         values.put(COLUMN_PEDIDO_IDCLIENTE,pedido.getIdCliente());
+        values.put(COLUMN_PEDIDO_NOMECLIENTE,pedido.getNomeCliente());
         values.put(COLUMN_PEDIDO_VALORTOTAL,pedido.getValorTotal());
 
         // Inserting Row
@@ -555,6 +510,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_PEDIDO_ID+" as _id",
                 COLUMN_PEDIDO_PEDIDO,
                 COLUMN_PEDIDO_IDCLIENTE,
+                COLUMN_PEDIDO_NOMECLIENTE,
                 COLUMN_PEDIDO_VALORTOTAL,
         };
 

@@ -39,8 +39,8 @@ public class ListPedido extends AppCompatActivity {
         pesquisar = (EditText) findViewById(R.id.edtConsulta);
 
         // mapeia cada coluna da tabela com um componente da tela
-        String[] origem = new String[]{"PEA001_PEDIDO","PEA001_CLA001_ID","PEA001_VALORTOTAL"};
-        int[] destino = new int[] { R.id.txtNome, R.id.txtTipoPessoa, R.id.txtCPF,};
+        String[] origem = new String[]{"PEA001_PEDIDO","PEA001_CLIENTE","PEA001_VALORTOTAL"};
+        int[] destino = new int[] { R.id.txtPedido, R.id.txtCliente, R.id.txtValorTotal};
         int flags = 0;
 
         PedidoAdapter = new SimpleCursorAdapter(ListPedido.this,R.layout.activity_view_pedido,null,origem,destino,flags);

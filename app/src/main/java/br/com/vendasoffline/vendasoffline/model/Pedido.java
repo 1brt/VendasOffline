@@ -8,12 +8,15 @@ public class Pedido {
 
     private int id;
     private int idCliente;
+    private String nomeCliente;
     private int pedido;
     private double valorTotal;
 
     public void setId(int id){ this.id = id; }
 
     public void setIdCliente(int idCliente){ this.idCliente = idCliente; }
+
+    public void setNomeCliente(String nomeCliente){ this.nomeCliente = nomeCliente; }
 
     public void setPedido(int pedido){ this.pedido = pedido; }
 
@@ -26,5 +29,7 @@ public class Pedido {
     public int getPedido(){ return pedido; }
 
     public double getValorTotal(){ return valorTotal; }
+
+    public String getNomeCliente(){ return nomeCliente; }
 
 }

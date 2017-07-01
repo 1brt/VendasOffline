@@ -57,7 +57,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.ListPedido"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.ListProduto"></activity>
     </application>
 
 </manifest>

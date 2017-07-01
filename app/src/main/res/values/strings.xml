@@ -15,6 +15,7 @@
         completions."</string>
     <string name="text_accounts">All Accounts</string>
     <string name="hint_nome">Nome</string>
+    <string name="hint_nro_pedido">Número Pedido</string>
     <string name="hint_email">Email</string>
     <string name="hint_cnpj">CNPJ</string>
     <string name="hint_cpf">CPF</string>
@@ -24,11 +25,17 @@
     <string name="hint_nro">Nro.</string>
     <string name="hint_nropedido">Número do Pedido</string>
     <string name="hint_qtde">Quantidade do Produto</string>
+    <string name="hint_cliente">Cliente</string>
+    <string name="hint_valor_total">Valor Total</string>
     <string name="hint_preco">Preço do Produto</string>
     <string name="hint_usuario">Usuário</string>
     <string name="hint_password">Senha</string>
     <string name="hint_confirm_password">Confirme a senha</string>
     <string name="hint_tipo_pessoa">Tipo Pessoa</string>
+    <string name="hint_produto">Produto</string>
+    <string name="hint_produto_descricao">Descrição</string>
+    <string name="hint_produto_qtde">Quantidade</string>
+    <string name="hint_produto_preco">Preço</string>
     <string name="hint_uf">UF</string>
     <string name="hint_spinner">Selecione um Item</string>
     <string name="hint_pesquisa">Pesquisar</string>
@@ -43,6 +50,7 @@
     <string name="error_message_email">Digite um Email Válido</string>
     <string name="error_message_password">Digite a Senha</string>
     <string name="success_message">Registro inserido com sucesso</string>
+    <string name="pedido_item_inserido">Item adicionado com sucesso ao pedido</string>
     <string name="text_not_member">Ainda não tem uma conta? Crie uma</string>
     <string name="text_already_member">Já é um membro? Faça o Login</string>
     <string name="error_email_exists">O Email já está cadastrado</string>
@@ -51,7 +59,7 @@
     <string name="error_valid_email_password">Usuário e/ou Senha inválidos</string>
     <string name="action_logout">Logout</string>
     <string name="text_localizacao">Pegar localização atual</string>
-    <string name="text_add_item">Adicionar novo Item</string>
+    <string name="text_add_item">Adicionar Novo Item</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main">MainActivity</string>
 
