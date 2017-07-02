@@ -1,7 +1,6 @@
 package br.com.vendasoffline.vendasoffline.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,10 +12,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -24,9 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-
 import br.com.vendasoffline.vendasoffline.activities.ListCliente;
-import br.com.vendasoffline.vendasoffline.activities.MainActivity;
 import br.com.vendasoffline.vendasoffline.classes.Permission;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import android.view.LayoutInflater;
@@ -36,7 +31,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +40,6 @@ import java.util.Locale;
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
-
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -53,15 +47,9 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class FragmentCadastroCliente extends Fragment implements View.OnClickListener {
-    private final static int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private View view;
     private TextInputLayout textInputLytNome;
     private TextInputLayout textInputLytCnpj;
-    /*private TextInputLayout textInputLytCidade;
-    private TextInputLayout textInputLytCep;
-    private TextInputLayout textInputLytNro;
-    private TextInputLayout textInputLytEndereco;*/
-
     private TextInputEditText textInputEdtxtNome;
     private TextInputEditText textInputEdtxtCnpj;
     private TextInputEditText textInputEdtxtCidade;
@@ -69,12 +57,11 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private TextInputEditText textInputEdtxtNro;
     private TextInputEditText textInputEdtxtEndereco;
     private RadioGroup rdgTipoPessoa;
-    private Spinner spnPais;
-    private Spinner spnUf;
+    private SearchableSpinner spnPais;
+    private SearchableSpinner spnUf;
     private Button btnCadastrar;
     private Button btnCancelar;
     private ImageButton btnGPS;
-
     private Customer cliente;
     private DatabaseHelper databaseHelper;
     private LocationManager locationManager;
@@ -112,8 +99,8 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         textInputEdtxtNro = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNro);
         textInputEdtxtEndereco = (TextInputEditText) view.findViewById(R.id.textInputEdtxtEndereco);
         rdgTipoPessoa = (RadioGroup) view.findViewById(R.id.rdgTipoPessoa);
-        spnPais = (Spinner) view.findViewById(R.id.spnPais);
-        spnUf = (Spinner) view.findViewById(R.id.spnUF);
+        spnPais = (SearchableSpinner) view.findViewById(R.id.spnPais);
+        spnUf = (SearchableSpinner) view.findViewById(R.id.spnUF);
         btnCadastrar = (Button) view.findViewById(R.id.btnCadastrar);
         btnCancelar = (Button) view.findViewById(R.id.btnCancelar);
         btnGPS = (ImageButton) view.findViewById(R.id.btnGPS);
@@ -152,6 +139,11 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         handler = new Handler();
 
         permis = new Permission(getActivity(),prefs);
+
+        spnPais.setTitle(getResources().getString(R.string.hint_spinner));
+        spnPais.setPositiveButton("Fechar");
+        spnUf.setTitle(getResources().getString(R.string.hint_spinner));
+        spnUf.setPositiveButton("Fechar");
 
     }
 
@@ -313,77 +305,6 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {}
     }
-
-    /*@TargetApi(Build.VERSION_CODES.M)
-    public boolean hasPermission(String permission){
-        boolean retorno = true;
-
-        if (getContext().checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        return retorno;
-    }
-
-    public void showMessage(String message){
-        new AlertDialog.Builder(getContext())
-                .setMessage(message)
-                .setPositiveButton("OK", null)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public boolean hasAllPermissions(){
-        boolean retorno = true;
-
-        if (getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        if (getContext().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        return retorno;
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public void requestAllPermissions(){
-        String permis = "Você precisa permitir o acesso ao(s) seguinte(s) recurso(s): \n";
-        Boolean comPermis = true;
-        Boolean firstRun = false;
-
-        if (prefs.getBoolean("firstrunLocation", true)) {
-            // Do first run stuff here then set 'firstrun' as false
-            // using the following line to edit/commit prefs
-            firstRun = true;
-
-            prefs.edit().putBoolean("firstrunLocation", false).commit();
-
-        }
-
-        if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) && !hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) && !firstRun) {
-            permis = permis + "Localização \n";
-            comPermis = false;
-        }
-
-        if (!comPermis){
-            showMessage(permis);
-            return;
-        }
-
-        if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            return;
-        }
-    }*/
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

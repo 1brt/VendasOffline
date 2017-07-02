@@ -5,10 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.Pedido;
 import br.com.vendasoffline.vendasoffline.model.PedidoItem;
@@ -100,7 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private String CREATE_PRODUCT_TABLE = "CREATE TABLE "+TABLE_PRODUCT+" (" +
             COLUMN_PRODUCT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            COLUMN_PRODUCT_CODIGO + " TEXT NOT NULL," +
+            COLUMN_PRODUCT_CODIGO + " TEXT NOT NULL UNIQUE," +
             COLUMN_PRODUCT_DESCRICAO + " TEXT NOT NULL)";
 
     private String CREATE_PEDIDO_TABLE = "CREATE TABLE "+TABLE_PEDIDO+" (" +
@@ -108,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_PEDIDO_IDCLIENTE + " INTEGER NOT NULL," +
             COLUMN_PEDIDO_NOMECLIENTE + " TEXT NOT NULL," +
             COLUMN_PEDIDO_PEDIDO + " INTEGER NOT NULL," +
-            COLUMN_PEDIDO_VALORTOTAL + " INTEGER DEFAULT 0, FOREIGN KEY (" +
+            COLUMN_PEDIDO_VALORTOTAL + " REAL DEFAULT 0, FOREIGN KEY (" +
             COLUMN_PEDIDO_IDCLIENTE +") REFERENCES " +
             TABLE_CUSTOMER +" (" + COLUMN_CUSTOMER_ID + "))";
 
@@ -116,8 +113,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_PEDIDO_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COLUMN_PEDIDO_ITEM_PEDIDO + " INTEGER NOT NULL," +
             COLUMN_PEDIDO_ITEM_PRODUTO + " INTEGER NOT NULL," +
-            COLUMN_PEDIDO_ITEM_QTDE + " INTEGER,"+
-            COLUMN_PEDIDO_ITEM_PRECO + " INTEGER, FOREIGN KEY (" +
+            COLUMN_PEDIDO_ITEM_QTDE + " REAL,"+
+            COLUMN_PEDIDO_ITEM_PRECO + " REAL, FOREIGN KEY (" +
             COLUMN_PEDIDO_ITEM_PEDIDO +") REFERENCES " +
             TABLE_PEDIDO +" (" + COLUMN_PEDIDO_ID + "), FOREIGN KEY (" +
             COLUMN_PEDIDO_ITEM_PRODUTO +") REFERENCES " +

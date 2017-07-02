@@ -15,26 +15,6 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <!--<EditText
-            android:id="@+id/edtxtNome"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ems="10"
-            android:maxLength="60"
-            android:inputType="textCapSentences"
-            android:hint="@string/hint_nome" />-->
-
-        <!--<EditText
-            android:id="@+id/edtxtCnpj"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ems="10"
-            android:maxLength="15"
-            android:inputType="textCapSentences"
-            android:hint="@string/hint_cpf" />-->
-
         <RadioGroup
             android:id="@+id/rdgTipoPessoa"
             android:layout_width="match_parent"
@@ -89,7 +69,7 @@
                 android:layout_height="match_parent"
                 android:ems="10"
                 android:hint="@string/hint_cpf"
-                android:inputType="textCapSentences"
+                android:inputType="phone"
                 android:maxLength="15"
                 android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
@@ -119,7 +99,7 @@
                 android:textSize="17sp" />
         </LinearLayout>
 
-        <Spinner
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spnPais"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -127,7 +107,7 @@
             android:entries="@array/array_paises"
             android:prompt="@string/prompt_paises"/>
 
-        <Spinner
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spnUF"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -135,15 +115,6 @@
             android:entries="@array/array_uf"
             android:prompt="@string/prompt_uf"/>
 
-        <!--<EditText
-            android:id="@+id/edtxtCidade"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ems="10"
-            android:maxLength="60"
-            android:inputType="textCapSentences"
-            android:hint="@string/hint_cidade" />-->
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLytCidade"
             android:layout_width="match_parent"
@@ -162,15 +133,6 @@
                 android:hint="@string/hint_cidade" />
         </android.support.design.widget.TextInputLayout>
 
-        <!--<EditText
-            android:id="@+id/edtxtEndereco"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:ems="10"
-            android:maxLength="60"
-            android:inputType="textCapSentences"
-            android:hint="@string/hint_endereco"/>-->
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLytEndereco"
             android:layout_width="match_parent"
@@ -196,15 +158,6 @@
             android:orientation="horizontal"
             android:weightSum="3">
 
-            <!--<EditText
-                android:id="@+id/edtxtCep"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/hint_cep"
-                android:inputType="textPostalAddress"
-                android:maxLength="10" />-->
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textInputLytCep"
                 android:layout_width="match_parent"
@@ -217,21 +170,12 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:maxLines="1"
+                    android:hint="@string/hint_cep"
+                    android:inputType="phone"
                     android:maxLength="10"
-                    android:inputType="textPostalAddress"
-                    android:hint="@string/hint_cep"/>
+                    android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
-            <!--<EditText
-                android:id="@+id/edtxtNro"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:ems="10"
-                android:hint="@string/hint_nro"
-                android:inputType="number"
-                android:maxLength="6" />-->
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textInputLytNro"
                 android:layout_width="match_parent"

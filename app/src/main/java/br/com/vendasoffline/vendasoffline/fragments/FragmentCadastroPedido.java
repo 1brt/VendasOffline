@@ -1,58 +1,28 @@
 package br.com.vendasoffline.vendasoffline.fragments;
 
-import android.Manifest;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import br.com.vendasoffline.vendasoffline.R;
-import br.com.vendasoffline.vendasoffline.activities.ListCliente;
 import br.com.vendasoffline.vendasoffline.activities.ListPedido;
-import br.com.vendasoffline.vendasoffline.classes.Permission;
 import br.com.vendasoffline.vendasoffline.helpers.InputValidation;
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.Pedido;
 import br.com.vendasoffline.vendasoffline.model.PedidoItem;
 import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by lrgabriel on 26/05/17.
@@ -62,8 +32,6 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     private View view;
     private DatabaseHelper databaseHelper;
     private TextInputLayout   textInputLytNroPedido;
-    private TextInputLayout   textInputLytQtdeProduto;
-    private TextInputLayout   textInputLytPrecoProduto;
     private TextInputEditText textInputEdtxtNroPedido;
     private TextInputEditText textInputEdtxtQtdeProduto;
     private TextInputEditText textInputEdtxtPrecoProduto;
@@ -91,8 +59,6 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     private void initViews() {
 
         textInputLytNroPedido = (TextInputLayout) view.findViewById(R.id.textInputLytNroPedido);
-        textInputLytQtdeProduto = (TextInputLayout) view.findViewById(R.id.textInputLytQtdeProduto);
-        textInputLytPrecoProduto = (TextInputLayout) view.findViewById(R.id.textInputLytPrecoProduto);
 
         textInputEdtxtNroPedido = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNroPedido);
         textInputEdtxtQtdeProduto = (TextInputEditText) view.findViewById(R.id.textInputEdtxtQtdeProduto);
@@ -160,6 +126,10 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
         Customer cliente = (Customer) spnClientes.getSelectedItem();
 
+        if (cliente == null){
+            return;
+        }
+
         Pedido pedido = new Pedido();
 
         pedido.setIdCliente(cliente.getId());
@@ -205,8 +175,9 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             textInputEdtxtNroPedido.setText(null);
             spnClientes.setSelection(0);
             textInputEdtxtNroPedido.requestFocus();
+        }else {
+            textInputEdtxtQtdeProduto.requestFocus();
         }
-
     }
 
     private void setSpinner(){
@@ -274,8 +245,13 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
         // Só insere o item na lista caso o preço e a quantidade não sejam nulos.
         if (textInputEdtxtPrecoProduto.length() > 0 && textInputEdtxtQtdeProduto.length() > 0){
-            PedidoItem pedItem = new PedidoItem();
             Produto produto = (Produto) spnProdutos.getSelectedItem();
+
+            if (produto == null){
+                return;
+            }
+
+            PedidoItem pedItem = new PedidoItem();
 
             pedItem.setIdProduto(produto.getId());
             pedItem.setPreco(Double.parseDouble(textInputEdtxtPrecoProduto.getText().toString()));
@@ -286,7 +262,6 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             if (mostraMsg){
                 Snackbar.make(view, getString(R.string.pedido_item_inserido), Snackbar.LENGTH_LONG).show();
                 emptyInputEditText(false);
-
             }
         }
     }
