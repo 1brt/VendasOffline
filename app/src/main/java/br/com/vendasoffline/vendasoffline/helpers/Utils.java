@@ -18,6 +18,7 @@ import br.com.vendasoffline.vendasoffline.webService.NetworkUtils;
 /**
  * Created by allanromanato on 11/4/15.
  */
+
 public class Utils {
 
     private String tipo;

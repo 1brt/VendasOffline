@@ -185,7 +185,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
             Cursor cur = databaseHelper.getClientes(null, null);
 
-            ArrayList<Customer> contacts = new ArrayList<>();
+            ArrayList<Customer> clientes = new ArrayList<>();
 
             for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
                 Customer cliente = new Customer();
@@ -202,11 +202,11 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
                 cliente.setNro(cur.getInt(cur.getColumnIndex("CLA001_NRO")));
                 cliente.setSinc(cur.getInt(cur.getColumnIndex("CLA001_SINCRONIZADO")));
 
-                contacts.add(cliente);
+                clientes.add(cliente);
             }
 
             ArrayAdapter<Customer> adapterCliente =
-                    new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, contacts);
+                    new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, clientes);
             adapterCliente.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 
             spnClientes.setAdapter(adapterCliente);
