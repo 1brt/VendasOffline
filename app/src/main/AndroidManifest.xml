@@ -58,7 +58,10 @@
         <activity
             android:name=".activities.ListPedido"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activities.ListProduto"></activity>
+        <activity
+            android:name=".activities.ListProduto"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -572,4 +572,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public Cursor getPedidoItens(String whereClause,String[] whereArgs) {
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_PEDIDO_ITEM_ID + " as _id",
+                COLUMN_PRODUCT_CODIGO,
+                COLUMN_PRODUCT_DESCRICAO,
+                COLUMN_PEDIDO_ITEM_QTDE,
+                COLUMN_PEDIDO_ITEM_PRECO
+        };
+
+        // sorting orders
+        String sortOrder =
+                COLUMN_PEDIDO_ITEM_ID + " ASC";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // query the user table
+        /**
+         * Here query function is used to fetch records from user table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id,user_name,user_email,user_password FROM user ORDER BY user_name;
+         */
+
+        Cursor cursor = db.query(TABLE_PEDIDO_ITEM + ", " + TABLE_PRODUCT, //Table to query
+                                columns,     //columns to return
+                                whereClause, //columns for the WHERE clause
+                                whereArgs,   //The values for the WHERE clause
+                                null,       //group the rows
+                                null,       //filter by row groups
+                                sortOrder); //The sort order
+
+
+        return cursor;
+    }
+
 }
