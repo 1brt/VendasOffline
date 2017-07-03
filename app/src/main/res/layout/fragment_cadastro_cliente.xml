@@ -125,12 +125,11 @@
                 android:id="@+id/textInputEdtxtCidade"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:ems="10"
-                android:maxLines="1"
-                android:maxLength="60"
+                android:hint="@string/hint_cidade"
                 android:inputType="textCapSentences"
-                android:hint="@string/hint_cidade" />
+                android:maxLength="60"
+                android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

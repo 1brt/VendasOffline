@@ -18,7 +18,7 @@
     <string name="hint_nro_pedido">Número Pedido</string>
     <string name="hint_email">Email</string>
     <string name="hint_cnpj">CNPJ</string>
-    <string name="hint_cpf">CPF</string>
+    <string name="hint_cpf">CPF/CNPJ</string>
     <string name="hint_cidade">Cidade</string>
     <string name="hint_endereco">Endereço</string>
     <string name="hint_cep">Cep</string>
@@ -49,6 +49,8 @@
     <string name="error_message_user">Digite um Usuário Válido</string>
     <string name="error_message_email">Digite um Email Válido</string>
     <string name="error_message_password">Digite a Senha</string>
+    <string name="error_message_cpf">Digite seu CPF/CNPJ completo</string>
+    <string name="error_message_cidade">Digite a Cidade</string>
     <string name="success_message">Registro inserido com sucesso</string>
     <string name="pedido_item_inserido">Item adicionado com sucesso ao pedido</string>
     <string name="text_not_member">Ainda não tem uma conta? Crie uma</string>

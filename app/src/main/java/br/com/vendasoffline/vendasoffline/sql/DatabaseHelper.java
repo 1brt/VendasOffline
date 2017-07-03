@@ -87,9 +87,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_CUSTOMER_NOME + " TEXT NOT NULL," +
             COLUMN_CUSTOMER_TIPOPESSOA + " TEXT NOT NULL," +
             COLUMN_CUSTOMER_CNPJ + " TEXT NOT NULL UNIQUE," +
-            COLUMN_CUSTOMER_PAIS + " TEXT," +
-            COLUMN_CUSTOMER_UF + " TEXT," +
-            COLUMN_CUSTOMER_CIDADE + " TEXT," +
+            COLUMN_CUSTOMER_PAIS + " TEXT NOT NULL," +
+            COLUMN_CUSTOMER_UF + " TEXT NOT NULL," +
+            COLUMN_CUSTOMER_CIDADE + " TEXT NOT NULL," +
             COLUMN_CUSTOMER_CEP + " TEXT," +
             COLUMN_CUSTOMER_NRO + " INTEGER," +
             COLUMN_CUSTOMER_ENDERECO + " TEXT," +
@@ -395,6 +395,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CUSTOMER_CEP, cliente.getCep());
         values.put(COLUMN_CUSTOMER_NRO, cliente.getNro());
         values.put(COLUMN_CUSTOMER_ENDERECO, cliente.getEndereco());
+        values.put(COLUMN_CUSTOMER_SINC, cliente.getSinc());
 
         // Inserting Row
         db.insert(TABLE_CUSTOMER, null, values);
@@ -405,17 +406,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        for (Customer cli : clientes){
+        for (Customer cliente : clientes){
 
-            values.put(COLUMN_CUSTOMER_NOME, cli.getNome());
-            values.put(COLUMN_CUSTOMER_TIPOPESSOA,cli.getTipoPessoa());
-            values.put(COLUMN_CUSTOMER_CNPJ, cli.getCnpj());
-            values.put(COLUMN_CUSTOMER_PAIS, cli.getPais());
-            values.put(COLUMN_CUSTOMER_UF, cli.getUf());
-            values.put(COLUMN_CUSTOMER_CIDADE, cli.getCidade());
-            values.put(COLUMN_CUSTOMER_CEP, cli.getCep());
-            values.put(COLUMN_CUSTOMER_NRO, cli.getNro());
-            values.put(COLUMN_CUSTOMER_ENDERECO, cli.getEndereco());
+            values.put(COLUMN_CUSTOMER_NOME, cliente.getNome());
+            values.put(COLUMN_CUSTOMER_TIPOPESSOA,cliente.getTipoPessoa());
+            values.put(COLUMN_CUSTOMER_CNPJ, cliente.getCnpj());
+            values.put(COLUMN_CUSTOMER_PAIS, cliente.getPais());
+            values.put(COLUMN_CUSTOMER_UF, cliente.getUf());
+            values.put(COLUMN_CUSTOMER_CIDADE, cliente.getCidade());
+            values.put(COLUMN_CUSTOMER_CEP, cliente.getCep());
+            values.put(COLUMN_CUSTOMER_NRO, cliente.getNro());
+            values.put(COLUMN_CUSTOMER_ENDERECO, cliente.getEndereco());
+            values.put(COLUMN_CUSTOMER_SINC, cliente.getSinc());
 
             // Inserting Row
             db.insert(TABLE_CUSTOMER, null, values);
@@ -424,6 +426,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         db.close();
+    }
+
+    public boolean altCustomer(long idLinha){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues dados = new ContentValues();
+        String whereClause = COLUMN_CUSTOMER_ID + "=" + idLinha;
+
+        dados.put(COLUMN_CUSTOMER_SINC, 0);
+
+        return db.update(TABLE_CUSTOMER, dados, whereClause, null) > 0;
     }
 
     public void addProduct(Produto produto){

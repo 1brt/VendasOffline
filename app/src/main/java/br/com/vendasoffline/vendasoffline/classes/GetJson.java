@@ -86,34 +86,38 @@ public class GetJson extends AsyncTask<Void, Void, String> {
 
         Cursor cur = databaseHelper.getClientes(whereClause,whereArgs);
 
-        ArrayList<Customer> clientes = new ArrayList<>();
+        JSONArray jsArray = new JSONArray();
+        JSONObject jsResult = new JSONObject();
 
-        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
-            Customer cliente = new Customer();
-
-            cliente.setId(cur.getInt(cur.getColumnIndex("_id")));
-            cliente.setNome(cur.getString(cur.getColumnIndex("CLA001_NOME")));
-            cliente.setTipoPessoa(cur.getString(cur.getColumnIndex("CLA001_TIPOPESSOA")));
-            cliente.setCnpj(cur.getString(cur.getColumnIndex("CLA001_CNPJ")));
-            cliente.setPais(cur.getString(cur.getColumnIndex("CLA001_PAIS")));
-            cliente.setUf(cur.getString(cur.getColumnIndex("CLA001_UF")));
-            cliente.setCidade(cur.getString(cur.getColumnIndex("CLA001_CIDADE")));
-            cliente.setCep(cur.getString(cur.getColumnIndex("CLA001_CEP")));
-            cliente.setEndereco(cur.getString(cur.getColumnIndex("CLA001_ENDERECO")));
-            cliente.setNro(cur.getInt(cur.getColumnIndex("CLA001_NRO")));
-            cliente.setSinc(cur.getInt(cur.getColumnIndex("CLA001_SINCRONIZADO")));
-
-            clientes.add(cliente);
-        }
-
-        JSONArray jsArray = new JSONArray(clientes);
-        JSONObject jsObject = new JSONObject();
-
-        // populate the array
         try {
-            jsObject.put("Clientes",jsArray);
-            String xml = XML.toString(jsObject);
-        } catch (JSONException e) {
+            for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+                JSONObject jsGroup = new JSONObject();
+                long id = cur.getInt(cur.getColumnIndex("_id"));
+
+                jsGroup.put("ID", id);
+                jsGroup.put("Nome", cur.getString(cur.getColumnIndex("CLA001_NOME")));
+                jsGroup.put("TipoPessoa", cur.getString(cur.getColumnIndex("CLA001_TIPOPESSOA")));
+                jsGroup.put("CNPJ", cur.getString(cur.getColumnIndex("CLA001_CNPJ")));
+                jsGroup.put("Pais", cur.getString(cur.getColumnIndex("CLA001_PAIS")));
+                jsGroup.put("UF", cur.getString(cur.getColumnIndex("CLA001_UF")));
+                jsGroup.put("Cidade", cur.getString(cur.getColumnIndex("CLA001_CIDADE")));
+                jsGroup.put("CEP", cur.getString(cur.getColumnIndex("CLA001_CEP")));
+                jsGroup.put("Endereco", cur.getString(cur.getColumnIndex("CLA001_ENDERECO")));
+                jsGroup.put("Numero", cur.getInt(cur.getColumnIndex("CLA001_NRO")));
+
+                JSONObject jsOuter = new JSONObject();
+
+                jsOuter.put("Cliente", jsGroup);
+
+                jsArray.put(jsOuter);
+
+                databaseHelper.altCustomer(id);
+            }
+
+            jsResult.put("Clientes", jsArray);
+            String xml = XML.toString(jsResult);
+
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
