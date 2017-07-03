@@ -66,7 +66,8 @@ public class GetJson extends AsyncTask<Void, Void, String> {
             productList = new Utils("Produto").getInformacao("http://web.effectiveerp.com.br:88/teste/ECommerce/ErpRestService.svc/AndroidListarProdutos/2");
             (new DatabaseHelper(context)).addProduct(productList);
 
-            setJson();
+            setJsonCliente();
+            setJsonPedido();
         }
 
         return "Sincronização Concluída!";
@@ -79,7 +80,7 @@ public class GetJson extends AsyncTask<Void, Void, String> {
         }
     }
 
-    private void setJson(){
+    private void setJsonCliente(){
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         String whereClause = "CLA001_SINCRONIZADO = ?";
         String [] whereArgs = new String[] {String.format(Locale.getDefault(),"%d",0)};
@@ -120,5 +121,80 @@ public class GetJson extends AsyncTask<Void, Void, String> {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void setJsonPedido(){
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+
+        Cursor cur = databaseHelper.getPedidos(null,null);
+
+        JSONArray jsArray = new JSONArray();
+        JSONObject jsResult = new JSONObject();
+
+        try {
+            for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+                JSONObject jsGroup = new JSONObject();
+                long id = cur.getInt(cur.getColumnIndex("_id"));
+
+                jsGroup.put("ID", id);
+                jsGroup.put("TipoDoc", "PEDWEB");
+                jsGroup.put("NroPedido", cur.getString(cur.getColumnIndex("PEA001_PEDIDO")));
+                jsGroup.put("Cliente", cur.getString(cur.getColumnIndex("PEA001_CLIENTE")));
+                jsGroup.put("ValorTotal", cur.getString(cur.getColumnIndex("PEA001_VALORTOTAL")));
+
+                JSONObject jsOuter = new JSONObject();
+
+                jsOuter.put("Pedido", jsGroup);
+
+                jsArray.put(jsOuter);
+
+                JSONObject jsItens = setJsonPedidoItem(id);
+            }
+
+            jsResult.put("Pedidos", jsArray);
+            String xml = XML.toString(jsResult);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private JSONObject setJsonPedidoItem(long idPedido){
+        DatabaseHelper databaseHelper = new DatabaseHelper(context);
+        String whereClause = "PEB001_ESA001_ID = ESA001_ID AND PEB001_PEA001_ID = ?";
+        String [] whereArgs = new String[] {String.format(Locale.getDefault(),"%d",idPedido)};
+
+        Cursor cur = databaseHelper.getPedidoItens(whereClause,whereArgs);
+
+        JSONArray jsArray = new JSONArray();
+        JSONObject jsResult = new JSONObject();
+
+        try {
+            for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+                JSONObject jsGroup = new JSONObject();
+
+                jsGroup.put("ID", cur.getInt(cur.getColumnIndex("_id")));
+                jsGroup.put("IDPedido", idPedido);
+                jsGroup.put("Produto", cur.getString(cur.getColumnIndex("ESA001_CODIGO")));
+                jsGroup.put("Descricao", cur.getString(cur.getColumnIndex("ESA001_DESCRICAO")));
+                jsGroup.put("Quantidade", cur.getString(cur.getColumnIndex("PEB001_QTDESOL")));
+                jsGroup.put("Preco", cur.getString(cur.getColumnIndex("PEB001_PRECO")));
+
+                JSONObject jsOuter = new JSONObject();
+
+                jsOuter.put("Item", jsGroup);
+
+                jsArray.put(jsOuter);
+            }
+
+            jsResult.put("Itens", jsArray);
+            String xml = XML.toString(jsResult);
+            int i = 0;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return jsResult;
+
     }
 }

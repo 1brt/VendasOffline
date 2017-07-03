@@ -1,11 +1,18 @@
 package br.com.vendasoffline.vendasoffline.activities;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -41,6 +48,8 @@ public class ListProduto extends AppCompatActivity {
         ProdutoAdapter = new SimpleCursorAdapter(ListProduto.this,R.layout.activity_view_produto,null,origem,destino,flags);
         produtoListView.setAdapter(ProdutoAdapter);
 
+        registerForContextMenu(produtoListView);
+
         Bundle extras = getIntent().getExtras();
 
         if (extras.containsKey("idPedido")){
@@ -69,6 +78,34 @@ public class ListProduto extends AppCompatActivity {
         //sempre que executar onResume, irá fazer uma busca no banco de dados
         super.onStart();
         getProdutos();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId()==R.id.listViewProdutos) {
+            // Utilizado para vibrar o celular.
+            Vibrator vibe = (Vibrator) getBaseContext().getSystemService(Context.VIBRATOR_SERVICE) ;
+            vibe.vibrate(50);
+
+            String[] menuItems = new String[] {"Excluir"};
+            for (int i = 0; i<menuItems.length; i++) {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int menuItemIndex = item.getItemId();
+
+        if (menuItemIndex == 0){  // Excluir
+            new DatabaseHelper(getBaseContext()).delPedidoItem(info.id);
+            new getProdutos().execute();
+        }
+
+        return true;
     }
 
     private class getProdutos extends AsyncTask<Object, Object, Cursor> {

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
+import java.util.Locale;
+
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.Pedido;
 import br.com.vendasoffline.vendasoffline.model.PedidoItem;
@@ -451,6 +453,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public boolean delCustomer(long id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = "CLA001_ID = ?";
+        String[] whereArgs = new String[]{String.format(Locale.getDefault(),"%d",id)};
+
+        return db.delete(TABLE_CUSTOMER,whereClause,whereArgs) > 0;
+    }
+
     public void addProduct(ArrayList<Produto> produtos){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -548,6 +558,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public boolean delPedido(long id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = "PEB001_PEA001_ID = ?";
+        String[] whereArgs = new String[]{String.format(Locale.getDefault(),"%d",id)};
+
+        db.delete(TABLE_PEDIDO_ITEM,whereClause,whereArgs);
+
+        whereClause = "PEA001_ID = ?";
+
+        return db.delete(TABLE_PEDIDO,whereClause,whereArgs) > 0;
+    }
+
     public void addPedidoItem(ArrayList<PedidoItem> pedidoItem){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -615,6 +637,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         return cursor;
+    }
+
+    public boolean delPedidoItem(long id){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String whereClause = "PEB001_ID = ?";
+        String[] whereArgs = new String[]{String.format(Locale.getDefault(),"%d",id)};
+
+        return db.delete(TABLE_PEDIDO_ITEM,whereClause,whereArgs) > 0;
     }
 
 }
