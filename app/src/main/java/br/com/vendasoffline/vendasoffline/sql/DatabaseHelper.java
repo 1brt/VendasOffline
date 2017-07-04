@@ -531,7 +531,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_PEDIDO_PEDIDO,
                 COLUMN_PEDIDO_IDCLIENTE,
                 COLUMN_PEDIDO_NOMECLIENTE,
-                COLUMN_PEDIDO_VALORTOTAL,
+                "printf(\"%.4f\", "+COLUMN_PEDIDO_VALORTOTAL+") AS "+COLUMN_PEDIDO_VALORTOTAL
         };
 
         // sorting orders
@@ -608,10 +608,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // array of columns to fetch
         String[] columns = {
                 COLUMN_PEDIDO_ITEM_ID + " as _id",
+                COLUMN_PEDIDO_ITEM_PEDIDO,
                 COLUMN_PRODUCT_CODIGO,
                 COLUMN_PRODUCT_DESCRICAO,
-                COLUMN_PEDIDO_ITEM_QTDE,
-                COLUMN_PEDIDO_ITEM_PRECO
+                "printf(\"%.2f\", "+COLUMN_PEDIDO_ITEM_QTDE+") AS "+COLUMN_PEDIDO_ITEM_QTDE,
+                "printf(\"%.4f\", "+COLUMN_PEDIDO_ITEM_PRECO+") AS "+COLUMN_PEDIDO_ITEM_PRECO
         };
 
         // sorting orders

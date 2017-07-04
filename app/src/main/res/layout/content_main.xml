@@ -5,9 +5,44 @@
     android:id="@+id/fragment_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
+    android:paddingRight="@dimen/padding_img_view"
+    android:paddingLeft="@dimen/padding_img_view"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="br.com.vendasoffline.vendasoffline.activities.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingTop="@dimen/padding_img_view"
+        android:paddingBottom="@dimen/padding_img_bottom_top"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgView01"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@color/colorBackground" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:paddingTop="@dimen/padding_img_bottom_top"
+        android:paddingBottom="@dimen/padding_img_view"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgView02"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            app:srcCompat="@color/colorBackground" />
+    </LinearLayout>
 </LinearLayout>

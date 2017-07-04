@@ -68,6 +68,7 @@ public class GetJson extends AsyncTask<Void, Void, String> {
 
             setJsonCliente();
             setJsonPedido();
+            setJsonPedidoItem();
         }
 
         return "Sincronização Concluída!";
@@ -116,7 +117,10 @@ public class GetJson extends AsyncTask<Void, Void, String> {
             }
 
             jsResult.put("Clientes", jsArray);
-            String xml = XML.toString(jsResult);
+
+            // Aqui seria chamado a classe NetworkUtils, onde seria mandando o arquivo JSON atravéz do método POST, para o webservice, para que os clientes
+            // fossem inseridos, porém a empresa não disponibiliza nenhum webservice para que possamos fazer isso.
+            // Porém foi feito essa simulação de como seria caso tivesse um webservice para mandar os dados.
 
         }catch (Exception e){
             e.printStackTrace();
@@ -148,23 +152,24 @@ public class GetJson extends AsyncTask<Void, Void, String> {
 
                 jsArray.put(jsOuter);
 
-                JSONObject jsItens = setJsonPedidoItem(id);
             }
 
             jsResult.put("Pedidos", jsArray);
-            String xml = XML.toString(jsResult);
+
+            // Aqui seria chamado a classe NetworkUtils, onde seria mandando o arquivo JSON atravéz do método POST, para o webservice, para que os pedidos
+            // fossem inseridos, porém a empresa não disponibiliza nenhum webservice para que possamos fazer isso.
+            // Porém foi feito essa simulação de como seria caso tivesse um webservice para mandar os dados.
 
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private JSONObject setJsonPedidoItem(long idPedido){
+    private void setJsonPedidoItem(){
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
-        String whereClause = "PEB001_ESA001_ID = ESA001_ID AND PEB001_PEA001_ID = ?";
-        String [] whereArgs = new String[] {String.format(Locale.getDefault(),"%d",idPedido)};
+        String whereClause = "PEB001_ESA001_ID = ESA001_ID";
 
-        Cursor cur = databaseHelper.getPedidoItens(whereClause,whereArgs);
+        Cursor cur = databaseHelper.getPedidoItens(whereClause,null);
 
         JSONArray jsArray = new JSONArray();
         JSONObject jsResult = new JSONObject();
@@ -174,7 +179,7 @@ public class GetJson extends AsyncTask<Void, Void, String> {
                 JSONObject jsGroup = new JSONObject();
 
                 jsGroup.put("ID", cur.getInt(cur.getColumnIndex("_id")));
-                jsGroup.put("IDPedido", idPedido);
+                jsGroup.put("IDPedido", cur.getInt(cur.getColumnIndex("PEB001_PEA001_ID")));
                 jsGroup.put("Produto", cur.getString(cur.getColumnIndex("ESA001_CODIGO")));
                 jsGroup.put("Descricao", cur.getString(cur.getColumnIndex("ESA001_DESCRICAO")));
                 jsGroup.put("Quantidade", cur.getString(cur.getColumnIndex("PEB001_QTDESOL")));
@@ -188,13 +193,14 @@ public class GetJson extends AsyncTask<Void, Void, String> {
             }
 
             jsResult.put("Itens", jsArray);
-            String xml = XML.toString(jsResult);
-            int i = 0;
+
+            // Aqui seria chamado a classe NetworkUtils, onde seria mandando o arquivo JSON atravéz do método POST, para o webservice, para que os itens dos pedidos
+            // fossem inseridos, porém a empresa não disponibiliza nenhum webservice para que possamos fazer isso.
+            // Porém foi feito essa simulação de como seria caso tivesse um webservice para mandar os dados.
+
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        return jsResult;
 
     }
 }

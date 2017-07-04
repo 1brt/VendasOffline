@@ -63,7 +63,7 @@
     <string name="text_localizacao">Pegar localização atual</string>
     <string name="text_add_item">Adicionar Novo Item</string>
     <string name="title_activity_register">RegisterActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Dashboard</string>
 
     <string name="radio_button_fnavigation_drawer_socmedisica">Física</string>
     <string name="radio_button_juridica">Jurídica</string>

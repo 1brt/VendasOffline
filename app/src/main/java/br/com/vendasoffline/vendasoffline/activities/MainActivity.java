@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,10 +23,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.classes.GetJson;
 import br.com.vendasoffline.vendasoffline.classes.Permission;
@@ -45,6 +51,8 @@ public class MainActivity extends AppCompatActivity
     private DatabaseHelper databaseHelper;
     private ProgressDialog load;
     private Permission permis;
+    private ImageView imgView01;
+    private ImageView imgView02;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +86,11 @@ public class MainActivity extends AppCompatActivity
 
         View hView =  navigationView.getHeaderView(0);
         imgvUsuario = (ImageView) hView.findViewById(R.id.imgvFotoUsuario);
+
+        imgView01 = (ImageView) findViewById(R.id.imgView01);
+        imgView02 = (ImageView) findViewById(R.id.imgView02);
+
+        new ImageLoadTask("http://chart.googleapis.com/chart?cht=lc&chco=FF6342%2CADDE63%2C63C6DE&chs=420x250&chd=t%3A12.92%2C8.98%2C17.5%2C11.6%7C7.5%2C10.12%2C12.3%2C15.25%7C8.76%2C11.25%2C13.02%2C14.33&chl=6%20meses%7C1%20ano%7C1a%206m%7C2%20anos&chdl=Peso%20Min.%7CPeso%20M%C3%A1x.%7C%20Peso",imgView01).execute();
 
         TextView txtNomeUsuario = (TextView) hView.findViewById(R.id.txtNomeUsuario);
         TextView txtNomeEmail = (TextView) hView.findViewById(R.id.txtNomeEmail);
@@ -256,4 +269,40 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
+    public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private String url;
+        private ImageView imageView;
+
+        public ImageLoadTask(String url, ImageView imageView) {
+            this.url = url;
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                URL urlConnection = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlConnection
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            imageView.setImageBitmap(result);
+        }
+
+    }
+
 }
