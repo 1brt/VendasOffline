@@ -136,6 +136,8 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         pedido.setNomeCliente(cliente.getNome());
         pedido.setPedido(Integer.parseInt(textInputEdtxtNroPedido.getText().toString()));
 
+        inserirPedidoItem(false);
+
         if (itens.size() > 0){
             double vlrTotal = 0;
 
@@ -147,8 +149,6 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         }
 
         long id = databaseHelper.addPedido(pedido);
-
-        inserirPedidoItem(false);
 
         if (itens.size() > 0){
             for (PedidoItem itemPed : itens){
