@@ -20,8 +20,8 @@
         android:paddingBottom="@dimen/padding_img_bottom_top"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgView01"
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChartClientes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -37,8 +37,8 @@
         android:paddingBottom="@dimen/padding_img_view"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgView02"
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChartProdutos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

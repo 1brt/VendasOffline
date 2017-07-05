@@ -558,6 +558,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getPedidosClientes() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        return db.rawQuery("SELECT CLA001_NOME,SUM(PEA001_PEDIDO) AS NROPEDIDOS\n" +
+                "\tFROM CLTBA001,PETBA001\n" +
+                " WHERE PEA001_CLA001_ID = CLA001_ID\n" +
+                " GROUP BY CLA001_NOME\n" +
+                "HAVING NROPEDIDOS > 0", null);
+    }
+
     public boolean delPedido(long id){
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = "PEB001_PEA001_ID = ?";
@@ -638,6 +648,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         return cursor;
+    }
+
+    public Cursor getItensUsados() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        return db.rawQuery("SELECT ESA001_CODIGO AS ESA001_PRODUTO, SUM(PEB001_ID) AS NROPRODUTOS\n" +
+                "\tFROM PETBB001, ESTBA001\n" +
+                " WHERE PEB001_ESA001_ID = ESA001_ID\n" +
+                " GROUP BY ESA001_CODIGO||'-'||ESA001_DESCRICAO\n" +
+                "HAVING NROPRODUTOS > 0", null);
     }
 
     public boolean delPedidoItem(long id){

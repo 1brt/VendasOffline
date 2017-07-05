@@ -24,10 +24,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         try {
             if (isOnline(context)) {
-
-                Toast.makeText(context, "network available", Toast.LENGTH_SHORT).show();
                 (new GetJson(context)).execute();
-
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -5,10 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,15 +24,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
+import java.util.ArrayList;
+import java.util.Random;
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.classes.GetJson;
 import br.com.vendasoffline.vendasoffline.classes.Permission;
@@ -51,8 +54,8 @@ public class MainActivity extends AppCompatActivity
     private DatabaseHelper databaseHelper;
     private ProgressDialog load;
     private Permission permis;
-    private ImageView imgView01;
-    private ImageView imgView02;
+    private PieChart pieChartClientes;
+    private PieChart pieChartProdutos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +90,8 @@ public class MainActivity extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         imgvUsuario = (ImageView) hView.findViewById(R.id.imgvFotoUsuario);
 
-        imgView01 = (ImageView) findViewById(R.id.imgView01);
-        imgView02 = (ImageView) findViewById(R.id.imgView02);
-
-        new ImageLoadTask("http://chart.googleapis.com/chart?cht=lc&chco=FF6342%2CADDE63%2C63C6DE&chs=420x250&chd=t%3A12.92%2C8.98%2C17.5%2C11.6%7C7.5%2C10.12%2C12.3%2C15.25%7C8.76%2C11.25%2C13.02%2C14.33&chl=6%20meses%7C1%20ano%7C1a%206m%7C2%20anos&chdl=Peso%20Min.%7CPeso%20M%C3%A1x.%7C%20Peso",imgView01).execute();
+        pieChartClientes = (PieChart) findViewById(R.id.pieChartClientes);
+        pieChartProdutos = (PieChart) findViewById(R.id.pieChartProdutos);
 
         TextView txtNomeUsuario = (TextView) hView.findViewById(R.id.txtNomeUsuario);
         TextView txtNomeEmail = (TextView) hView.findViewById(R.id.txtNomeEmail);
@@ -123,6 +124,12 @@ public class MainActivity extends AppCompatActivity
             }
 
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        geraGrafico();
     }
 
     @Override
@@ -259,7 +266,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void carregaImagemUsuario(){
+    private void carregaImagemUsuario(){
         File imgFile = new  File(diretorio,usuario.getUsuario() + ".jpg");
         if(imgFile.exists() && permis.hasExternalPermission()){
 
@@ -270,39 +277,100 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+    private void geraGrafico(){
+        int i = 0;
+        Cursor cur = databaseHelper.getPedidosClientes();
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
 
-        private String url;
-        private ImageView imageView;
-
-        public ImageLoadTask(String url, ImageView imageView) {
-            this.url = url;
-            this.imageView = imageView;
+        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+            entries.add(new Entry(cur.getInt(cur.getColumnIndex("NROPEDIDOS")), i++));
+            labels.add(cur.getString(cur.getColumnIndex("CLA001_NOME")));
         }
 
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            try {
-                URL urlConnection = new URL(url);
-                HttpURLConnection connection = (HttpURLConnection) urlConnection
-                        .openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
+        PieDataSet dataset = new PieDataSet(entries, "");
+        PieData data = new PieData(labels, dataset);
+
+        /*ArrayList<Entry> entries = new ArrayList<>();
+        entries.add(new Entry(4, 0));
+        entries.add(new Entry(8, 1));
+        entries.add(new Entry(6, 2));
+        entries.add(new Entry(12, 3));
+        entries.add(new Entry(18, 4));
+        entries.add(new Entry(18, 5));
+        entries.add(new Entry(18, 6));
+
+        PieDataSet dataset = new PieDataSet(entries, "");
+
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("Lenardo");
+        labels.add("Predro");
+        labels.add("Paula");
+        labels.add("Seila");
+        labels.add("Alguem");
+        labels.add("Marcia");
+        labels.add("Julho");*/
+
+        /*int[] colors = new int[]{Color.rgb(111, 175, 174),
+                Color.rgb(243, 221, 49),
+                Color.rgb(181, 110, 174),
+                Color.rgb(56, 110, 174),
+                Color.rgb(243, 50, 49),
+                Color.rgb(70, 50, 49),
+                Color.rgb(70, 175, 49),
+                Color.rgb(252, 150, 18),
+                Color.rgb(252, 81, 18),
+                Color.rgb(13, 81, 18),
+                Color.rgb(112, 131, 18),
+                Color.rgb(112, 131, 127),
+                Color.rgb(14, 114, 84),
+                Color.rgb(252, 158, 101),
+                Color.rgb(78, 22, 101),
+                Color.rgb(78, 22, 20),
+                Color.rgb(78, 120, 93),
+                Color.rgb(103, 84, 156),
+                Color.rgb(103, 252, 111),
+                Color.rgb(36, 67, 67)};*/
+
+        //PieData data = new PieData(labels, dataset);
+        dataset.setColors(ColorTemplate.createColors(geraCores()));
+        pieChartClientes.setDescription(getResources().getString(R.string.pie_chart_clientes));
+        pieChartClientes.setData(data);
+
+        pieChartClientes.animateY(3500);
+
+        cur = databaseHelper.getItensUsados();
+
+        entries = new ArrayList<>();
+        labels = new ArrayList<>();
+
+        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+            entries.add(new Entry(cur.getInt(cur.getColumnIndex("NROPRODUTOS")), i++));
+            labels.add(cur.getString(cur.getColumnIndex("ESA001_PRODUTO")));
         }
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            super.onPostExecute(result);
-            imageView.setImageBitmap(result);
+        dataset = new PieDataSet(entries, "");
+        data = new PieData(labels, dataset);
+        dataset.setColors(ColorTemplate.createColors(geraCores()));
+
+        pieChartProdutos.setDescription(getResources().getString(R.string.pie_chart_produtos));
+        pieChartProdutos.setData(data);
+
+        pieChartProdutos.animateY(3500);
+    }
+
+    private int[] geraCores(){
+
+        int[] colors= new int[100];
+        Random rand = new Random();
+
+        for (int i = 0;i < 100;i++){
+
+            colors[i] = Color.rgb(rand.nextInt(256),rand.nextInt(256),rand.nextInt(256));
+
         }
 
+        return colors;
     }
 
 }
