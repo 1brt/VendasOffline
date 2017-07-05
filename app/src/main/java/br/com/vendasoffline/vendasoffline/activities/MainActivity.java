@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity
     private User usuario;
     private ImageView imgvUsuario;
     private DatabaseHelper databaseHelper;
-    private ProgressDialog load;
     private Permission permis;
     private PieChart pieChartClientes;
     private PieChart pieChartProdutos;
