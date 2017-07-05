@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
-        geraGrafico();
+        geraGraficos();
     }
 
     @Override
@@ -277,86 +277,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void geraGrafico(){
-        int i = 0;
-        Cursor cur = databaseHelper.getPedidosClientes();
-        ArrayList<Entry> entries = new ArrayList<>();
-        ArrayList<String> labels = new ArrayList<>();
-
-        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
-            entries.add(new Entry(cur.getInt(cur.getColumnIndex("NROPEDIDOS")), i++));
-            labels.add(cur.getString(cur.getColumnIndex("CLA001_NOME")));
-        }
-
-        PieDataSet dataset = new PieDataSet(entries, "");
-        PieData data = new PieData(labels, dataset);
-
-        /*ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(4, 0));
-        entries.add(new Entry(8, 1));
-        entries.add(new Entry(6, 2));
-        entries.add(new Entry(12, 3));
-        entries.add(new Entry(18, 4));
-        entries.add(new Entry(18, 5));
-        entries.add(new Entry(18, 6));
-
-        PieDataSet dataset = new PieDataSet(entries, "");
-
-        ArrayList<String> labels = new ArrayList<>();
-        labels.add("Lenardo");
-        labels.add("Predro");
-        labels.add("Paula");
-        labels.add("Seila");
-        labels.add("Alguem");
-        labels.add("Marcia");
-        labels.add("Julho");*/
-
-        /*int[] colors = new int[]{Color.rgb(111, 175, 174),
-                Color.rgb(243, 221, 49),
-                Color.rgb(181, 110, 174),
-                Color.rgb(56, 110, 174),
-                Color.rgb(243, 50, 49),
-                Color.rgb(70, 50, 49),
-                Color.rgb(70, 175, 49),
-                Color.rgb(252, 150, 18),
-                Color.rgb(252, 81, 18),
-                Color.rgb(13, 81, 18),
-                Color.rgb(112, 131, 18),
-                Color.rgb(112, 131, 127),
-                Color.rgb(14, 114, 84),
-                Color.rgb(252, 158, 101),
-                Color.rgb(78, 22, 101),
-                Color.rgb(78, 22, 20),
-                Color.rgb(78, 120, 93),
-                Color.rgb(103, 84, 156),
-                Color.rgb(103, 252, 111),
-                Color.rgb(36, 67, 67)};*/
-
-        //PieData data = new PieData(labels, dataset);
-        dataset.setColors(ColorTemplate.createColors(geraCores()));
-        pieChartClientes.setDescription(getResources().getString(R.string.pie_chart_clientes));
-        pieChartClientes.setData(data);
-
-        pieChartClientes.animateY(3500);
-
-        cur = databaseHelper.getItensUsados();
-
-        entries = new ArrayList<>();
-        labels = new ArrayList<>();
-
-        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
-            entries.add(new Entry(cur.getInt(cur.getColumnIndex("NROPRODUTOS")), i++));
-            labels.add(cur.getString(cur.getColumnIndex("ESA001_PRODUTO")));
-        }
-
-        dataset = new PieDataSet(entries, "");
-        data = new PieData(labels, dataset);
-        dataset.setColors(ColorTemplate.createColors(geraCores()));
-
-        pieChartProdutos.setDescription(getResources().getString(R.string.pie_chart_produtos));
-        pieChartProdutos.setData(data);
-
-        pieChartProdutos.animateY(3500);
+    private void geraGraficos(){
+        geraGraficoCliente();
+        geraGraficoProduto();
     }
 
     private int[] geraCores(){
@@ -371,6 +294,48 @@ public class MainActivity extends AppCompatActivity
         }
 
         return colors;
+    }
+
+    private void geraGraficoCliente(){
+        int i = 0;
+        Cursor cur = databaseHelper.getPedidosClientes();
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
+
+        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+            entries.add(new Entry(cur.getInt(cur.getColumnIndex("NROPEDIDOS")), i++));
+            labels.add(cur.getString(cur.getColumnIndex("CLA001_NOME")));
+        }
+
+        PieDataSet dataset = new PieDataSet(entries, "");
+        PieData data = new PieData(labels, dataset);
+
+        dataset.setColors(ColorTemplate.createColors(geraCores()));
+        pieChartClientes.setDescription(getResources().getString(R.string.pie_chart_clientes));
+        pieChartClientes.setData(data);
+
+        pieChartClientes.animateY(3500);
+    }
+
+    private void geraGraficoProduto(){
+        int i = 0;
+        Cursor cur = databaseHelper.getItensUsados();
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
+
+        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+            entries.add(new Entry(cur.getInt(cur.getColumnIndex("NROPRODUTOS")), i++));
+            labels.add(cur.getString(cur.getColumnIndex("ESA001_PRODUTO")));
+        }
+
+        PieDataSet dataset = new PieDataSet(entries, "");
+        PieData data = new PieData(labels, dataset);
+
+        dataset.setColors(ColorTemplate.createColors(geraCores()));
+        pieChartProdutos.setDescription(getResources().getString(R.string.pie_chart_produtos));
+        pieChartProdutos.setData(data);
+
+        pieChartProdutos.animateY(3500);
     }
 
 }

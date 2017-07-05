@@ -65,7 +65,7 @@
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main">Dashboard</string>
     <string name="pie_chart_clientes">"Gráfico de Pedidos por Clientes"</string>
-    <string name="pie_chart_produtos">"Gráfico de uso de Produtos em Pedidos"</string>
+    <string name="pie_chart_produtos">"Gráfico de Produtos em Pedidos"</string>
 
     <string name="radio_button_fnavigation_drawer_socmedisica">Física</string>
     <string name="radio_button_juridica">Jurídica</string>
