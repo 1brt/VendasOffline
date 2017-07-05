@@ -17,9 +17,7 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
 import java.util.Locale;
-
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 

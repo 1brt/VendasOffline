@@ -20,12 +20,8 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
 import br.com.vendasoffline.vendasoffline.R;
-import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroCliente;
 import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroPedido;
-import br.com.vendasoffline.vendasoffline.model.Pedido;
-import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
 public class ListPedido extends AppCompatActivity {

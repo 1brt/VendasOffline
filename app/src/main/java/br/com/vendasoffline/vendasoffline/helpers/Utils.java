@@ -1,22 +1,16 @@
 package br.com.vendasoffline.vendasoffline.helpers;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.webService.NetworkUtils;
 
 /**
- * Created by allanromanato on 11/4/15.
+ * Created by lrgabriel on 23/06/17.
  */
 
 public class Utils {

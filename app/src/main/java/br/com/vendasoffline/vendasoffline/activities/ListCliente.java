@@ -1,7 +1,6 @@
 package br.com.vendasoffline.vendasoffline.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroCliente;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
@@ -70,7 +68,7 @@ public class ListCliente extends AppCompatActivity{
         pesquisar.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                getClientes();
+                getCustomer();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -84,7 +82,7 @@ public class ListCliente extends AppCompatActivity{
     protected void onStart(){
         //sempre que executar onResume, irá fazer uma busca no banco de dados
         super.onStart();
-        getClientes();
+        getCustomer();
     }
 
     @Override
@@ -109,18 +107,21 @@ public class ListCliente extends AppCompatActivity{
         int menuItemIndex = item.getItemId();
 
         if (menuItemIndex == 0){  // Excluir
-            new DatabaseHelper(getBaseContext()).delCustomer(info.id);
-            new getClientes().execute();
+            if (new DatabaseHelper(getBaseContext()).delCustomer(info.id)){
+                new getCustomer().execute();
+            }else{
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.error_delete_message), Snackbar.LENGTH_LONG).show();
+            }
         }
 
         return true;
     }
 
-    private class getClientes extends AsyncTask<Object, Object, Cursor> {
+    private class getCustomer extends AsyncTask<Object, Object, Cursor> {
         DatabaseHelper dbConnection = new DatabaseHelper(ListCliente.this);
         @Override
         protected Cursor doInBackground(Object... params){
-            return dbConnection.getClientes(whereClause,whereArgs); //retorna a Pontuação
+            return dbConnection.getCustomer(whereClause,whereArgs); //retorna a Pontuação
         }
         // usa o cursor retornado pelo doInBackground
         @Override
@@ -134,12 +135,12 @@ public class ListCliente extends AppCompatActivity{
         }
     }
 
-    public void getClientes(){
+    public void getCustomer(){
         whereClause = "CLA001_NOME LIKE ? OR CLA001_CIDADE LIKE ? OR CLA001_TIPOPESSOA LIKE ? OR CLA001_CNPJ LIKE ?";
         whereArgs = new String[] {"%"+pesquisar.getText().toString()+"%",
                 "%"+pesquisar.getText().toString()+"%",
                 "%"+pesquisar.getText().toString()+"%",
                 "%"+pesquisar.getText().toString()+"%"};
-        new getClientes().execute();
+        new getCustomer().execute();
     }
 }

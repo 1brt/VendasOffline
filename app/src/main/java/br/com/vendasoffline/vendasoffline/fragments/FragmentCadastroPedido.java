@@ -184,7 +184,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     private void setSpinner(){
         try {
 
-            Cursor cur = databaseHelper.getClientes(null, null);
+            Cursor cur = databaseHelper.getCustomer(null, null);
 
             ArrayList<Customer> clientes = new ArrayList<>();
 
@@ -212,7 +212,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
             spnClientes.setAdapter(adapterCliente);
 
-            spnClientes.setTitle(getResources().getString(R.string.hint_spinner));
+            spnClientes.setTitle(getResources().getString(R.string.hint_spinner_cliente));
             spnClientes.setPositiveButton("Fechar");
 
             cur = databaseHelper.getProdutos(null,null);
@@ -235,7 +235,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             adapterProduto.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 
             spnProdutos.setAdapter(adapterProduto);
-            spnProdutos.setTitle(getResources().getString(R.string.hint_spinner));
+            spnProdutos.setTitle(getResources().getString(R.string.hint_spinner_produto));
             spnProdutos.setPositiveButton("Fechar");
         }catch (Exception e){
             e.printStackTrace();

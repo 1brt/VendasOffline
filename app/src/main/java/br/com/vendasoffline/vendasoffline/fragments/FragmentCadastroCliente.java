@@ -142,9 +142,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         permis = new Permission(getActivity(),prefs);
 
-        spnPais.setTitle(getResources().getString(R.string.hint_spinner));
+        spnPais.setTitle(getResources().getString(R.string.hint_spinner_pais));
         spnPais.setPositiveButton("Fechar");
-        spnUf.setTitle(getResources().getString(R.string.hint_spinner));
+        spnUf.setTitle(getResources().getString(R.string.hint_spinner_uf));
         spnUf.setPositiveButton("Fechar");
 
     }
@@ -172,7 +172,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
     @Override
     public void onDestroy() {
-        ((ListCliente) getActivity()).getClientes();
+        ((ListCliente) getActivity()).getCustomer();
         removeUpdates();
         super.onDestroy();
     }
@@ -319,7 +319,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("O GPS do dispositivo parece estar desabilitado, deseja abilita-lo?")
+        builder.setMessage(getResources().getString(R.string.message_builder))
                 .setCancelable(false)
                 .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {

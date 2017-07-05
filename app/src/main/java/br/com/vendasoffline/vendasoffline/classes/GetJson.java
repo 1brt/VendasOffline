@@ -5,16 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.XML;
-
 import java.util.ArrayList;
 import java.util.Locale;
-
-import br.com.vendasoffline.vendasoffline.activities.MainActivity;
 import br.com.vendasoffline.vendasoffline.helpers.NetworkChangeReceiver;
 import br.com.vendasoffline.vendasoffline.helpers.Utils;
 import br.com.vendasoffline.vendasoffline.model.Customer;
@@ -86,7 +80,7 @@ public class GetJson extends AsyncTask<Void, Void, String> {
         String whereClause = "CLA001_SINCRONIZADO = ?";
         String [] whereArgs = new String[] {String.format(Locale.getDefault(),"%d",0)};
 
-        Cursor cur = databaseHelper.getClientes(whereClause,whereArgs);
+        Cursor cur = databaseHelper.getCustomer(whereClause,whereArgs);
 
         JSONArray jsArray = new JSONArray();
         JSONObject jsResult = new JSONObject();

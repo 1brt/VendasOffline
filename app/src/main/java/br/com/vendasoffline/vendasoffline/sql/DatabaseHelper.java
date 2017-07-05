@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.Locale;
-
 import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.Pedido;
 import br.com.vendasoffline.vendasoffline.model.PedidoItem;
@@ -344,7 +343,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public Cursor getClientes(String whereClause,String[] whereArgs) {
+    public Cursor getCustomer(String whereClause,String[] whereArgs) {
         // array of columns to fetch
         String[] columns = {
                 COLUMN_CUSTOMER_ID+" as _id",
@@ -441,16 +440,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.update(TABLE_CUSTOMER, dados, whereClause, null) > 0;
     }
 
-    public void addProduct(Produto produto){
+    public boolean valCustomer(long idCliente){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_PRODUCT_CODIGO, produto.getCodigo());
-        values.put(COLUMN_PRODUCT_DESCRICAO,produto.getDescricao());
+        String whereArgs[] = new String[]{String.format(Locale.getDefault(),"%d",idCliente)};
 
-        // Inserting Row
-        db.insert(TABLE_PRODUCT, null, values);
-        db.close();
+        Cursor cur = db.rawQuery("SELECT CLA001_NOME FROM PETBA001,CLTBA001 WHERE CLA001_ID = PEA001_CLA001_ID AND CLA001_ID = ?", whereArgs);
+
+        // Caso encontre algum registro, quer dizer q não pode deletar o cliente.
+        if (cur != null){
+            return false;
+        }
+
+        return true;
     }
 
     public boolean delCustomer(long id){
@@ -458,7 +460,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String whereClause = "CLA001_ID = ?";
         String[] whereArgs = new String[]{String.format(Locale.getDefault(),"%d",id)};
 
-        return db.delete(TABLE_CUSTOMER,whereClause,whereArgs) > 0;
+        if (valCustomer(id)){
+            return db.delete(TABLE_CUSTOMER,whereClause,whereArgs) > 0;
+        }
+
+        return false;
     }
 
     public void addProduct(ArrayList<Produto> produtos){
@@ -561,7 +567,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getPedidosClientes() {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        return db.rawQuery("SELECT CLA001_NOME,SUM(PEA001_PEDIDO) AS NROPEDIDOS\n" +
+        return db.rawQuery("SELECT CLA001_NOME,COUNT(PEA001_PEDIDO) AS NROPEDIDOS\n" +
                 "\tFROM CLTBA001,PETBA001\n" +
                 " WHERE PEA001_CLA001_ID = CLA001_ID\n" +
                 " GROUP BY CLA001_NOME\n" +
@@ -594,22 +600,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             // Inserting Row
             db.insert(TABLE_PEDIDO_ITEM, null, values);
         }
-
-        db.close();
-    }
-
-    public void addPedidoItem(PedidoItem pedidoItem){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-
-        values.put(COLUMN_PEDIDO_ITEM_PEDIDO, pedidoItem.getIdPedido());
-        values.put(COLUMN_PEDIDO_ITEM_PRODUTO,pedidoItem.getIdProduto());
-        values.put(COLUMN_PEDIDO_ITEM_QTDE,pedidoItem.getQtde());
-        values.put(COLUMN_PEDIDO_ITEM_PRECO,pedidoItem.getPreco());
-
-        // Inserting Row
-        db.insert(TABLE_PEDIDO_ITEM, null, values);
 
         db.close();
     }
@@ -653,7 +643,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getItensUsados() {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        return db.rawQuery("SELECT ESA001_CODIGO AS ESA001_PRODUTO, SUM(PEB001_ID) AS NROPRODUTOS\n" +
+        return db.rawQuery("SELECT ESA001_CODIGO AS ESA001_PRODUTO, COUNT(PEB001_ID) AS NROPRODUTOS\n" +
                 "\tFROM PETBB001, ESTBA001\n" +
                 " WHERE PEB001_ESA001_ID = ESA001_ID\n" +
                 " GROUP BY ESA001_CODIGO||'-'||ESA001_DESCRICAO\n" +
