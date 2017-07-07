@@ -446,22 +446,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String whereArgs[] = new String[]{String.format(Locale.getDefault(),"%d",idCliente)};
 
         Cursor cur = db.rawQuery("SELECT CLA001_NOME FROM PETBA001,CLTBA001 WHERE CLA001_ID = PEA001_CLA001_ID AND CLA001_ID = ?", whereArgs);
-
+        boolean b = cur.moveToFirst();
+        int a = cur.getCount();
         // Caso encontre algum registro, quer dizer q não pode deletar o cliente.
-        if (cur != null){
-            return false;
+        if (!(cur.moveToFirst()) || cur.getCount() ==0){
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public boolean delCustomer(long id){
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = "CLA001_ID = ?";
-        String[] whereArgs = new String[]{String.format(Locale.getDefault(),"%d",id)};
+        String[] whereArgs = new String[]{String.format(Locale.getDefault(),"%d",id)};;
 
         if (valCustomer(id)){
-            return db.delete(TABLE_CUSTOMER,whereClause,whereArgs) > 0;
+            int a = db.delete(TABLE_CUSTOMER,whereClause,whereArgs);
+            return a > 0;
         }
 
         return false;
