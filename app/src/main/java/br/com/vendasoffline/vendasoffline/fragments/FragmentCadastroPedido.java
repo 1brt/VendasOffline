@@ -136,6 +136,8 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         pedido.setNomeCliente(cliente.getNome());
         pedido.setPedido(Integer.parseInt(textInputEdtxtNroPedido.getText().toString()));
 
+        inserirPedidoItem(false);
+
         if (itens.size() > 0){
             double vlrTotal = 0;
 
@@ -147,8 +149,6 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
         }
 
         long id = databaseHelper.addPedido(pedido);
-
-        inserirPedidoItem(false);
 
         if (itens.size() > 0){
             for (PedidoItem itemPed : itens){
@@ -175,6 +175,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             textInputEdtxtNroPedido.setText(null);
             spnClientes.setSelection(0);
             textInputEdtxtNroPedido.requestFocus();
+            itens.clear();
         }else {
             textInputEdtxtQtdeProduto.requestFocus();
         }
@@ -183,7 +184,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
     private void setSpinner(){
         try {
 
-            Cursor cur = databaseHelper.getClientes(null, null);
+            Cursor cur = databaseHelper.getCustomer(null, null);
 
             ArrayList<Customer> clientes = new ArrayList<>();
 
@@ -211,7 +212,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
 
             spnClientes.setAdapter(adapterCliente);
 
-            spnClientes.setTitle(getResources().getString(R.string.hint_spinner));
+            spnClientes.setTitle(getResources().getString(R.string.hint_spinner_cliente));
             spnClientes.setPositiveButton("Fechar");
 
             cur = databaseHelper.getProdutos(null,null);
@@ -234,7 +235,7 @@ public class FragmentCadastroPedido extends Fragment implements View.OnClickList
             adapterProduto.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 
             spnProdutos.setAdapter(adapterProduto);
-            spnProdutos.setTitle(getResources().getString(R.string.hint_spinner));
+            spnProdutos.setTitle(getResources().getString(R.string.hint_spinner_produto));
             spnProdutos.setPositiveButton("Fechar");
         }catch (Exception e){
             e.printStackTrace();

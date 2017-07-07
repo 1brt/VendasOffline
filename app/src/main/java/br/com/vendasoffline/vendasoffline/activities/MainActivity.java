@@ -5,10 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,16 +24,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Random;
 import br.com.vendasoffline.vendasoffline.R;
 import br.com.vendasoffline.vendasoffline.classes.GetJson;
 import br.com.vendasoffline.vendasoffline.classes.Permission;
-import br.com.vendasoffline.vendasoffline.helpers.Utils;
-import br.com.vendasoffline.vendasoffline.model.Customer;
 import br.com.vendasoffline.vendasoffline.model.User;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
@@ -47,8 +52,9 @@ public class MainActivity extends AppCompatActivity
     private User usuario;
     private ImageView imgvUsuario;
     private DatabaseHelper databaseHelper;
-    private ProgressDialog load;
     private Permission permis;
+    private PieChart pieChartClientes;
+    private PieChart pieChartProdutos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,9 @@ public class MainActivity extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
         imgvUsuario = (ImageView) hView.findViewById(R.id.imgvFotoUsuario);
 
+        pieChartClientes = (PieChart) findViewById(R.id.pieChartClientes);
+        pieChartProdutos = (PieChart) findViewById(R.id.pieChartProdutos);
+
         TextView txtNomeUsuario = (TextView) hView.findViewById(R.id.txtNomeUsuario);
         TextView txtNomeEmail = (TextView) hView.findViewById(R.id.txtNomeEmail);
 
@@ -104,11 +113,8 @@ public class MainActivity extends AppCompatActivity
         if (v.getId()==R.id.imgvFotoUsuario) {
 
             permis.requestContentPermissions();
-            //requestAllPermissions();
 
             if (permis.hasContentPermissions()){
-            //if (hasAllCameraPermissions()){
-                //vibrate();
                 menu.setHeaderTitle("Selecione uma Opção");
                 String[] menuItems = new String[] {"Câmera","Galeria"};
                 for (int i = 0; i<menuItems.length; i++) {
@@ -120,15 +126,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        geraGraficos();
+    }
+
+    @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+
         int menuItemIndex = item.getItemId();
 
         if (menuItemIndex == 0){  // Câmera
             Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            /*File image = new File(folder, usuario.getUsuario() + ".jpg");
-            Uri uriSavedImage = Uri.fromFile(image);
-            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);*/
             startActivityForResult(takePicture, MY_PERMISSIONS_REQUEST_ACTION_IMAGE_CAPTURE);
         }else if (menuItemIndex == 1){ // Galeria
             String status = Environment.getExternalStorageState();
@@ -144,8 +153,6 @@ public class MainActivity extends AppCompatActivity
                         tempUri);
                 pickPhoto.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
                 startActivityForResult(pickPhoto, MY_PERMISSIONS_REQUEST_ACTION_PICK);
-                /*Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto, 1);*/
             }
         }
 
@@ -158,9 +165,6 @@ public class MainActivity extends AppCompatActivity
         switch(requestCode) {
             case MY_PERMISSIONS_REQUEST_ACTION_IMAGE_CAPTURE:
                 if(resultCode == RESULT_OK){
-                    /*Uri selectedImage = data.getData();
-                    imgvUsuario.setImageURI(selectedImage);*/
-                    //Set<String> keys = data.getExtras().keySet();
                     Bitmap photo = (Bitmap) data.getExtras().get("data");
                     imgvUsuario.setImageBitmap(photo);
                     try {
@@ -173,22 +177,12 @@ public class MainActivity extends AppCompatActivity
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    /*File imgFile = new  File(diretorio,usuario.getUsuario() + ".jpg");
 
-                    if(imgFile.exists()){
-
-                        Bitmap photo = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-                        imgvUsuario.setImageBitmap(photo);
-
-                    }*/
                 }
 
                 break;
             case MY_PERMISSIONS_REQUEST_ACTION_PICK:
                 if(resultCode == RESULT_OK){
-                    /*Uri selectedImage = data.getData();
-                    imgvUsuario.setImageURI(selectedImage);*/
                     Bitmap photo = BitmapFactory.decodeFile(diretorio + usuario.getUsuario() + ".jpg");
                     imgvUsuario.setImageBitmap(photo);
 
@@ -263,133 +257,15 @@ public class MainActivity extends AppCompatActivity
             // Faz sincronização com o webservice.
             (new GetJson(MainActivity.this)).execute();
 
-        }/* else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    /*@TargetApi(Build.VERSION_CODES.M)
-    public boolean hasPermission(String permission){
-        boolean retorno = true;
 
-        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        return retorno;
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public boolean hasAllCameraPermissions(){
-        boolean retorno = true;
-
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        return retorno;
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public boolean hasAllPermissions(){
-        boolean retorno = true;
-
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            retorno = false;
-        }
-
-        return retorno;
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public void requestAllPermissions(){
-        String permis = "Você precisa permitir o acesso ao(s) seguinte(s) recurso(s): \n";
-        Boolean comPermis = true;
-        Boolean firstRun = false;
-
-        if (prefs.getBoolean("firstrunContent", true)) {
-            // Do first run stuff here then set 'firstrun' as false
-            // using the following line to edit/commit prefs
-            firstRun = true;
-
-            prefs.edit().putBoolean("firstrunContent", false).commit();
-
-        }
-
-        if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) && !firstRun) {
-            permis = permis + "Armazenamento Externo \n";
-            comPermis = false;
-        }
-
-        if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) && !hasPermission(Manifest.permission.CAMERA) && !firstRun){
-            permis = permis + "Câmera \n";
-            comPermis = false;
-        }
-
-        if (!comPermis){
-            showMessage(permis);
-            return;
-        }
-
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-            checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            vibrate();
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA},
-                    MY_PERMISSIONS_REQUEST);
-            return;
-        }
-
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            vibrate();
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-            return;
-        }
-
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            vibrate();
-            requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    MY_PERMISSIONS_REQUEST_CAMERA);
-            return;
-        }
-    }
-
-    public void vibrate(){
-        // Utilizado para vibrar o celular.
-        Vibrator vibe = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE) ;
-        vibe.vibrate(50);
-    }
-
-    public void showMessage(String message){
-        new AlertDialog.Builder(MainActivity.this)
-                .setMessage(message)
-                .setPositiveButton("OK", null)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }*/
-
-    public void carregaImagemUsuario(){
+    private void carregaImagemUsuario(){
         File imgFile = new  File(diretorio,usuario.getUsuario() + ".jpg");
         if(imgFile.exists() && permis.hasExternalPermission()){
 
@@ -398,32 +274,67 @@ public class MainActivity extends AppCompatActivity
             imgvUsuario.setImageBitmap(photo);
 
         }
-
     }
 
-    /*private class GetJson extends AsyncTask<Void, Void, Customer> {
+    private void geraGraficos(){
+        geraGraficoCliente();
+        geraGraficoProduto();
+    }
 
-        @Override
-        protected void onPreExecute(){
-            load = ProgressDialog.show(MainActivity.this, "Por favor Aguarde ...", "Recuperando Informações do Servidor...");
+    private int[] geraCores(){
+
+        int[] colors= new int[100];
+        Random rand = new Random();
+
+        for (int i = 0;i < 100;i++){
+
+            colors[i] = Color.rgb(rand.nextInt(256),rand.nextInt(256),rand.nextInt(256));
+
         }
 
-        @Override
-        protected Customer doInBackground(Void... params) {
+        return colors;
+    }
 
-            Utils util = new Utils();
-            Customer c;
-            c=util.getInformacao("https://randomuser.me/api/");
-            c.setPais("sdioasjd");
-            c.setTipoPessoa("J");
+    private void geraGraficoCliente(){
+        int i = 0;
+        Cursor cur = databaseHelper.getPedidosClientes();
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
 
-            databaseHelper.addCustomer(c);
-            return c;
+        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+            entries.add(new Entry(cur.getInt(cur.getColumnIndex("NROPEDIDOS")), i++));
+            labels.add(cur.getString(cur.getColumnIndex("CLA001_NOME")));
         }
 
-        @Override
-        protected void onPostExecute(Customer cliente){
-            load.dismiss();
+        PieDataSet dataset = new PieDataSet(entries, "");
+        PieData data = new PieData(labels, dataset);
+
+        dataset.setColors(ColorTemplate.createColors(geraCores()));
+        pieChartClientes.setDescription(getResources().getString(R.string.pie_chart_clientes));
+        pieChartClientes.setData(data);
+
+        pieChartClientes.animateY(3500);
+    }
+
+    private void geraGraficoProduto(){
+        int i = 0;
+        Cursor cur = databaseHelper.getItensUsados();
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
+
+        for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()){
+            entries.add(new Entry(cur.getInt(cur.getColumnIndex("NROPRODUTOS")), i++));
+            labels.add(cur.getString(cur.getColumnIndex("ESA001_PRODUTO")));
         }
-    }*/
+
+        PieDataSet dataset = new PieDataSet(entries, "");
+        PieData data = new PieData(labels, dataset);
+
+        dataset.setColors(ColorTemplate.createColors(geraCores()));
+        pieChartProdutos.setDescription(getResources().getString(R.string.pie_chart_produtos));
+        pieChartProdutos.setData(data);
+
+        pieChartProdutos.animateY(3500);
+    }
+
 }

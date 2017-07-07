@@ -10,6 +10,8 @@
     <dimen name="padding_left_cadastro_cliente">5dp</dimen>
     <dimen name="padding_top_cadastro_cliente">5dp</dimen>
     <dimen name="padding_bottom_cadastro_cliente">5dp</dimen>
+    <dimen name="padding_img_view">5dp</dimen>
+    <dimen name="padding_img_bottom_top">2.5dp</dimen>
     <item name="visible" type="id" />
     <item name="masked" type="id" />
 

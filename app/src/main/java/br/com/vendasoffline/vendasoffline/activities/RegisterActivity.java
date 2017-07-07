@@ -51,9 +51,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         initObjects();
     }
 
-    /**
-     * This method is to initialize views
-     */
     private void initViews() {
         nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
 
@@ -75,17 +72,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    /**
-     * This method is to initialize listeners
-     */
     private void initListeners() {
         appCompatButtonRegister.setOnClickListener(this);
         appCompatTextViewLoginLink.setOnClickListener(this);
     }
 
-    /**
-     * This method is to initialize objects to be used
-     */
     private void initObjects() {
         inputValidation = new InputValidation(activity);
         databaseHelper = new DatabaseHelper(activity);
@@ -113,9 +104,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    /**
-     * This method is to validate the input text fields and post data to SQLite
-     */
     private void postDataToSQLite() {
         boolean hasUser,hasEmail;
 
@@ -168,9 +156,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    /**
-     * This method is to empty all input edit text
-     */
     private void emptyInputEditText() {
         textInputEditTextNome.setText(null);
         textInputEditTextUsuario.setText(null);

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar_image"
@@ -20,14 +18,6 @@
         android:elevation="1dp"
         android:paddingTop="@dimen/nav_header_imgvertical_spacing"
         android:src="@drawable/ic_empty_profile" />
-
-    <!--<ImageView
-        android:id="@+id/imgvFotoUsuario"
-        android:layout_width="120dp"
-        android:layout_height="100dp"
-        android:elevation="1dp"
-        android:paddingTop="@dimen/nav_header_imgvertical_spacing"
-        app:srcCompat="@drawable/ic_empty_profile" />-->
 
     <TextView
         android:id="@+id/txtNomeUsuario"

@@ -18,7 +18,7 @@
     <string name="hint_nro_pedido">Número Pedido</string>
     <string name="hint_email">Email</string>
     <string name="hint_cnpj">CNPJ</string>
-    <string name="hint_cpf">CPF</string>
+    <string name="hint_cpf">CPF/CNPJ</string>
     <string name="hint_cidade">Cidade</string>
     <string name="hint_endereco">Endereço</string>
     <string name="hint_cep">Cep</string>
@@ -37,7 +37,10 @@
     <string name="hint_produto_qtde">Quantidade</string>
     <string name="hint_produto_preco">Preço</string>
     <string name="hint_uf">UF</string>
-    <string name="hint_spinner">Selecione um Item</string>
+    <string name="hint_spinner_cliente">Selecione um Cliente</string>
+    <string name="hint_spinner_produto">Selecione um Produto</string>
+    <string name="hint_spinner_pais">Selecione um País</string>
+    <string name="hint_spinner_uf">Selecione uma UF</string>
     <string name="hint_pesquisa">Pesquisar</string>
     <string name="text_login">Login</string>
     <string name="text_register">Registrar</string>
@@ -49,7 +52,11 @@
     <string name="error_message_user">Digite um Usuário Válido</string>
     <string name="error_message_email">Digite um Email Válido</string>
     <string name="error_message_password">Digite a Senha</string>
+    <string name="error_message_cpf">Digite seu CPF/CNPJ completo</string>
+    <string name="error_message_cidade">Digite a Cidade</string>
     <string name="success_message">Registro inserido com sucesso</string>
+    <string name="error_delete_message">Não é possível excluir o cliente, já existem pedidos para ele.</string>
+    <string name="message_builder">O GPS do dispositivo parece estar desabilitado, deseja abilita-lo?</string>
     <string name="pedido_item_inserido">Item adicionado com sucesso ao pedido</string>
     <string name="text_not_member">Ainda não tem uma conta? Crie uma</string>
     <string name="text_already_member">Já é um membro? Faça o Login</string>
@@ -61,7 +68,9 @@
     <string name="text_localizacao">Pegar localização atual</string>
     <string name="text_add_item">Adicionar Novo Item</string>
     <string name="title_activity_register">RegisterActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Dashboard</string>
+    <string name="pie_chart_clientes">"Gráfico de Pedidos por Clientes"</string>
+    <string name="pie_chart_produtos">"Gráfico de Produtos em Pedidos"</string>
 
     <string name="radio_button_fnavigation_drawer_socmedisica">Física</string>
     <string name="radio_button_juridica">Jurídica</string>

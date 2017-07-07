@@ -50,6 +50,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
     private View view;
     private TextInputLayout textInputLytNome;
     private TextInputLayout textInputLytCnpj;
+    private TextInputLayout textInputLytCidade;
     private TextInputEditText textInputEdtxtNome;
     private TextInputEditText textInputEdtxtCnpj;
     private TextInputEditText textInputEdtxtCidade;
@@ -91,6 +92,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         textInputLytNome = (TextInputLayout) view.findViewById(R.id.textInputLytNome);
         textInputLytCnpj = (TextInputLayout) view.findViewById(R.id.textInputLytCnpj);
+        textInputLytCidade = (TextInputLayout) view.findViewById(R.id.textInputLytCidade);
         textInputEdtxtNome = (TextInputEditText) view.findViewById(R.id.textInputEdtxtNome);
         textInputEdtxtNome.requestFocus();
         textInputEdtxtCnpj = (TextInputEditText) view.findViewById(R.id.textInputEdtxtCnpj);
@@ -140,9 +142,9 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
         permis = new Permission(getActivity(),prefs);
 
-        spnPais.setTitle(getResources().getString(R.string.hint_spinner));
+        spnPais.setTitle(getResources().getString(R.string.hint_spinner_pais));
         spnPais.setPositiveButton("Fechar");
-        spnUf.setTitle(getResources().getString(R.string.hint_spinner));
+        spnUf.setTitle(getResources().getString(R.string.hint_spinner_uf));
         spnUf.setPositiveButton("Fechar");
 
     }
@@ -170,7 +172,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
     @Override
     public void onDestroy() {
-        ((ListCliente) getActivity()).getClientes();
+        ((ListCliente) getActivity()).getCustomer();
         removeUpdates();
         super.onDestroy();
     }
@@ -180,8 +182,11 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
         if (!inputValidation.isInputEditTextFilled(textInputEdtxtNome, textInputLytNome, getString(R.string.error_message_name))) {
             textInputEdtxtNome.requestFocus();
             return;
-        }else if (!inputValidation.isInputEditTextFilled(textInputEdtxtCnpj, textInputLytCnpj, getString(R.string.error_message_name))) {
+        }else if (!inputValidation.isInputEditTextFilled(textInputEdtxtCnpj, textInputLytCnpj, getString(R.string.error_message_cpf))) {
             textInputEdtxtCnpj.requestFocus();
+            return;
+        }else if (!inputValidation.isInputEditTextFilled(textInputEdtxtCidade, textInputLytCidade, getString(R.string.error_message_cidade))) {
+            textInputEdtxtCidade.requestFocus();
             return;
         }
 
@@ -193,15 +198,21 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
             tipo = "Jurídica";
         }
 
-        // TODO: Testar se os campos não não nulos, para não dar pau no toString.
         cliente.setTipoPessoa(tipo);
         cliente.setCnpj(textInputEdtxtCnpj.getText().toString().trim());
         cliente.setPais((String) spnPais.getSelectedItem());
         cliente.setUf(lstUfsAbrev.get(spnUf.getSelectedItemPosition()));
         cliente.setCidade(textInputEdtxtCidade.getText().toString().trim());
-        cliente.setCep(textInputEdtxtCep.getText().toString().trim());
-        cliente.setNro(Integer.parseInt(textInputEdtxtNro.getText().toString().trim()));
-        cliente.setEndereco(textInputEdtxtEndereco.getText().toString().trim());
+        if (textInputEdtxtCep.length() > 0){
+            cliente.setCep(textInputEdtxtCep.getText().toString().trim());
+        }
+        if (textInputEdtxtNro.length() > 0){
+            cliente.setNro(Integer.parseInt(textInputEdtxtNro.getText().toString().trim()));
+        }
+        if (textInputEdtxtEndereco.length() > 0){
+            cliente.setEndereco(textInputEdtxtEndereco.getText().toString().trim());
+        }
+        cliente.setSinc(0);
 
         databaseHelper.addCustomer(cliente);
 
@@ -308,7 +319,7 @@ public class FragmentCadastroCliente extends Fragment implements View.OnClickLis
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("O GPS do dispositivo parece estar desabilitado, deseja abilita-lo?")
+        builder.setMessage(getResources().getString(R.string.message_builder))
                 .setCancelable(false)
                 .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {

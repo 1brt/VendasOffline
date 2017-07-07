@@ -1,26 +1,27 @@
 package br.com.vendasoffline.vendasoffline.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-
 import br.com.vendasoffline.vendasoffline.R;
-import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroCliente;
 import br.com.vendasoffline.vendasoffline.fragments.FragmentCadastroPedido;
-import br.com.vendasoffline.vendasoffline.model.Pedido;
-import br.com.vendasoffline.vendasoffline.model.Produto;
 import br.com.vendasoffline.vendasoffline.sql.DatabaseHelper;
 
 public class ListPedido extends AppCompatActivity {
@@ -48,6 +49,8 @@ public class ListPedido extends AppCompatActivity {
 
         PedidoAdapter = new SimpleCursorAdapter(ListPedido.this,R.layout.activity_view_pedido,null,origem,destino,flags);
         pedidoListView.setAdapter(PedidoAdapter);
+
+        registerForContextMenu(pedidoListView);
 
         FloatingActionButton fabPedido = (FloatingActionButton) findViewById(R.id.fabPedido);
         fabPedido.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +88,34 @@ public class ListPedido extends AppCompatActivity {
             startActivity(viewProdutos);
         }
     };
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId()==R.id.listViewPedidos) {
+            // Utilizado para vibrar o celular.
+            Vibrator vibe = (Vibrator) getBaseContext().getSystemService(Context.VIBRATOR_SERVICE) ;
+            vibe.vibrate(50);
+
+            String[] menuItems = new String[] {"Excluir"};
+            for (int i = 0; i<menuItems.length; i++) {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int menuItemIndex = item.getItemId();
+
+        if (menuItemIndex == 0){  // Excluir
+            new DatabaseHelper(getBaseContext()).delPedido(info.id);
+            new getPedidos().execute();
+        }
+
+        return true;
+    }
 
     private class getPedidos extends AsyncTask<Object, Object, Cursor> {
         DatabaseHelper dbConnection = new DatabaseHelper(ListPedido.this);

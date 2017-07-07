@@ -10,10 +10,6 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 
-import java.io.File;
-
-import br.com.vendasoffline.vendasoffline.activities.MainActivity;
-
 /**
  * Created by home on 25/06/17.
  */
